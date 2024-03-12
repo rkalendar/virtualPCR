@@ -1,4 +1,4 @@
-# virtualPCR v1 "in silico PCR for simple and complex tasks"
+virtualPCR v1 "in silico PCR for simple and complex tasks"
 by Ruslan Kalendar 
 email: ruslan.kalendar@helsinki.fi
 web: https://primerdigital.com/tools/
