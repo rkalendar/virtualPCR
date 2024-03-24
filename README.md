@@ -1,10 +1,10 @@
-virtualPCR v1 "in silico PCR for simple and complex tasks"
+**virtualPCR v1 "in silico PCR for simple and complex tasks"**
 by Ruslan Kalendar 
 email: ruslan.kalendar@helsinki.fi
 web: https://primerdigital.com/tools/
 
 
-Availability and requirements:
+**Availability and requirements:**
 Operating system(s): Platform independent
 Programming language: Java
 Other requirements: Java 20 or higher
