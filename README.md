@@ -22,7 +22,10 @@ To run the project from the command line, go to the target folder and type the f
 
 ```java -jar \virtualPCR\dist\virtualPCR.jar \virtualPCR\task\config.file ```
 
-### Basic usage: **config.file**
+### Basic usage: 
+To enter parameters and specify the location of the target files and primer file, you must specify this via file on the command line. An example of such a file, here (file name or extension, does not matter):
+
+**config.file**
 ```
 targets_path=C:\virtualPCR\test\1.txt
 primers_path=C:\virtualPCR\task\primers.txt
