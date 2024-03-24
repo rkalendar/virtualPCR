@@ -24,8 +24,8 @@ To run the project from the command line, go to the target folder and type the f
 
 ### Basic usage: **config.file**
 ```
-targets_path=C:\MyPrograms\Java\virtualPCR\test\1.txt
-primers_path=C:\MyPrograms\Java\virtualPCR\task\primers.txt
+targets_path=C:\virtualPCR\test\1.txt
+primers_path=C:\virtualPCR\task\primers.txt
 type=primer/probe
 linkedsearch=false/true
 molecular=linear/circle
