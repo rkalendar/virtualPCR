@@ -1,0 +1,15 @@
+targets_path=C:\virtualPCR\test\7.txt
+primers_path=C:\virtualPCR\task\rt.txt
+type=primer/probe
+linkedsearch=false/true
+molecular=linear/circle
+number3errors=1
+minlen=100
+maxlen=5500
+FRpairs=false/true
+ShowPrimerAlignment=true/false
+ShowOnlyAmplicons=true/false
+ShowPCRProducts=true/false
+ShowPrimerAlignment=true/false
+ShowPrimerAlignmentPCRproduct=true/false 
+ShowPCRproductCalculation=true/false
