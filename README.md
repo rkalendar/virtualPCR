@@ -1,5 +1,5 @@
 ## virtualPCR v1.0
-## "in silico PCR for simple and complex tasks"
+## "in silico PCR for simple and complex tasks."
 by Ruslan Kalendar 
 
 email: ruslan.kalendar@helsinki.fi
@@ -20,7 +20,7 @@ How do I set or change [the Java path system variable](https://www.java.com/en/d
 
 To run the project from the command line, go to the target folder and type the following; an individual file or a file folder can be specified:
 
-```java -jar \virtualPCR\dist\virtualPCR.jar \virtualPCR\task\config.file ```
+```java -jar <virtualPCRPath>\dist\virtualPCR.jar <virtualPCRPath>\task\config.file ```
 
 ### Basic usage: 
 To enter parameters and specify the location of the target files and primer's file, you must specify this via a file on the command line. An example of such a file here (file name or extension does not matter):
@@ -101,7 +101,7 @@ Sequence data files are prepared using a text editor and saved in ASCII as text/
 A sequence in FASTA format consists of:
 One line starts with a ">" sign and a sequence identification code. A textual description of the sequence optionally follows it. Since it is not part of the official format description, the software can ignore it when it is present.
 One or more lines containing the sequence itself. A file in FASTA format may comprise more than one sequence.
-The input DNA sequence can contain the degenerate nucleotides accepted as IUPAC code, an extended vocabulary of 11 letters, which allows the description of ambiguous DNA code. Each letter represents a combination of one or several nucleotides: M (A/C), R (A/G), W (A/T), S (G/C), Y (C/T), K (G/T), V (A/G/C), H (A/C/T), D (A/G/T), B (C/G/T), N (A/G/C/T), and also U (T) and I (Inosine).
+The input DNA sequence can contain the degenerate nucleotides accepted as IUPAC code, an extended vocabulary of 11 letters, which allows the description of ambiguous DNA code. Each letter represents a combination of one or several nucleotides: M (A/C), R (A/G), W (A/T), S (G/C), Y (C/T), K (G/T), V (A/G/C), H (A/C/T), D (A/G/T), B (C/G/T), N (A/G/C/T).
 
 
 ## The output is saved in tab-delimited, plain text files. 
