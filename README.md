@@ -20,7 +20,11 @@ How do I set or change [the Java path system variable](https://www.java.com/en/d
 
 To run the project from the command line, go to the target folder and type the following; an individual file or a file folder can be specified:
 
-```java -jar <virtualPCRPath>\dist\virtualPCR.jar <virtualPCRPath>\task\config.file ```
+```
+java -jar <virtualPCRPath>\dist\virtualPCR.jar <virtualPCRPath>\task\config.file
+
+java -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\task\config.file 
+```
 
 ### Basic usage: 
 To enter parameters and specify the location of the target files and primer's file, you must specify this via a file on the command line. An example of such a file here (file name or extension does not matter):
