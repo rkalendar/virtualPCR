@@ -10,7 +10,7 @@ email: ruslan.kalendar@helsinki.fi
 
 Operating system(s): Platform independent
 
-Programming language: Java 20 or higher
+Programming language: Java 22 or higher
 
 [Java Downloads](https://www.oracle.com/java/technologies/downloads/)
 
@@ -23,7 +23,7 @@ To run the project from the command line, go to the target folder and type the f
 ```java -jar \virtualPCR\dist\virtualPCR.jar \virtualPCR\task\config.file ```
 
 ### Basic usage: 
-To enter parameters and specify the location of the target files and primer file, you must specify this via a file on the command line. An example of such a file here (file name or extension does not matter):
+To enter parameters and specify the location of the target files and primer's file, you must specify this via a file on the command line. An example of such a file here (file name or extension does not matter):
 
 > **config.file**
 ```
