@@ -62,9 +62,9 @@ ShowPCRproductCalculation=true/false
 **CTconversion=false/true**
 > “C >> T bisulphite conversion” – bisulphite modified genome sequence, design of specific PCR primers for in silico bisulphite conversion for both strands - only cytosines not followed by guanidine (CpG methylation) will be replaced by thymines:
 ```
-5’aaCGaagtCC-3' 5’aaCGaagtTT-3'
-  |||||||||| ->   |||||| |
-3’ttGCttCagg-5' 3’ttGCttTagg-5'
+5’aaCGaagtCCCCa-3'        5’aaCGaagtTTTTa-3'
+  |||||||||||||     ->      ||||||:|::::| 
+3’ttGCttCaggggt-5'        3’ttGCttTaggggt
 ```
 **FRpairs=false/true**
 > “Restrict analysis for F/R primer pairs” – this option is used to analyse the primers list, where the common name unites each primer pair. Moreover, the program is not limited to one unique pair per primer: for one "Forward" primer, there can be several "reverse" primers, the same as the “reverse” primer. The search for potential amplicons will be carried out only for these primer pairs, while other primers from the list will be ignored. It is possible to group pairs in the form of a table, with each line containing a separate pair:
