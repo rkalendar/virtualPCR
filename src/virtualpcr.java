@@ -64,6 +64,9 @@ public class virtualpcr {
                     if (line.contains("showprimeralignmentpcrproduct=true")) {
                         PCRmatch_alignment = true;
                     }
+                    if (line.contains("sequenceextract=true")) {
+                        seqextract = true;
+                    }
                     if (line.contains("frpairs=true")) {
                         FRpairs = true;
                     }
@@ -79,11 +82,9 @@ public class virtualpcr {
                     if (line.contains("showonlyamplicons=true")) {
                         ShowOnlyAmplicons = true;
                     }
-
                     if (line.contains("ctconversion=true")) {
                         CTconversion = true;
                     }
-
                     if (line.contains("number3errors=")) {
                         int h = StrToInt(line.substring(14));
                         if (h < 0) {
@@ -122,29 +123,57 @@ public class virtualpcr {
             String[] PrimersList = new String[1];
             String[] PrimersName = new String[1];
             String[] PrimersOri = new String[1];
+            int n = 1;
+            int t = 0;// t=1 Fasta; t=2 TAB
 
-            try (BufferedReader br = new BufferedReader(new FileReader(primersfile))) {
+            try {
+                List<String> lines = Files.readAllLines(Paths.get(primersfile));
+                for (String line : lines) {
+                    if (line.contains(">")) {
+                        t = 1;
+                        break;
+                    }
+                    if (line.contains("\t")) {
+                        t = 2;
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("\nFailed to open primer's file: " + primersfile);
+                return;
+            }
+
+            try {
                 List<String> ln = new ArrayList<>();
                 List<String> lo = new ArrayList<>();
                 List<String> ls = new ArrayList<>();
-
-                String line;
-                int n = 1;
-                while ((line = br.readLine()) != null) {
-                    System.out.println(line.trim());
-                    line = line.trim();
+                List<String> lines = Files.readAllLines(Paths.get(primersfile));
+                for (String line : lines) {
                     if (!line.isEmpty()) {
-                        String[] a = line.split("[ \t]+");
-                        if (a.length > 1) {
-                            for (int i = 1; i < a.length; i++) {
-                                String s = dna.DNA(a[i].toLowerCase());
-                                if (s.length() > 4) {
-                                    ln.add(a[0]);
-                                    lo.add(a[i]);
-                                    ls.add(s);
-                                    n++;
+                        System.out.println(line.trim());
+                        if (t == 1) {
+                            if (line.contains(">")) {
+                                n++;
+                                ln.add(line.trim());
+                            } else {
+                                lo.add(line.trim());
+                                ls.add(dna.DNA(line.toLowerCase()));
+                            }
+                        }
+                        if (t == 2) {
+                            String[] a = line.split("[ \t]+");
+                            if (a.length > 1) {
+                                for (int i = 1; i < a.length; i++) {
+                                    String s = dna.DNA(a[i].toLowerCase());
+                                    if (s.length() > 4) {
+                                        ln.add(a[0]);
+                                        lo.add(a[i]);
+                                        ls.add(s);
+                                        n++;
+                                    }
                                 }
                             }
+
                         }
                     }
                 }
@@ -156,43 +185,45 @@ public class virtualpcr {
                     PrimersList[0] = "";
                     PrimersName[0] = "";
                     PrimersOri[0] = "";
-
                     for (int i = 0; i < n - 1; i++) {
                         PrimersList[i + 1] = ls.get(i);
                         PrimersName[i + 1] = ln.get(i);
                         PrimersOri[i + 1] = lo.get(i);
                     }
                 }
-
             } catch (IOException e) {
+                return;
             }
 
-            File folder = new File(tagfile);
-            if (folder.exists() && (folder.isDirectory() || folder.isFile())) {
-                if (folder.isDirectory()) {
-                    File[] files = folder.listFiles();
-                    int k = -1;
-                    String[] filelist = new String[files.length];
-                    for (File file : files) {
-                        if (file.isFile()) {
-                            filelist[++k] = file.getAbsolutePath();
+            if (n > 1) {
+                File folder = new File(tagfile);
+                if (folder.exists() && (folder.isDirectory() || folder.isFile())) {
+                    if (folder.isDirectory()) {
+                        File[] files = folder.listFiles();
+                        int k = -1;
+                        String[] filelist = new String[files.length];
+                        for (File file : files) {
+                            if (file.isFile()) {
+                                filelist[++k] = file.getAbsolutePath();
+                            }
                         }
-                    }
-                    for (String nfile : filelist) {
-                        try {
-                            Run(nfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, CalculatePCRproduct, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion);
-                        } catch (Exception e) {
-                            System.out.println("Failed to open file: " + nfile);
+                        for (String nfile : filelist) {
+                            try {
+                                Run(nfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, CalculatePCRproduct, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion);
+                            } catch (Exception e) {
+                                System.out.println("Failed to open file: " + nfile);
+                            }
                         }
-                    }
 
+                    } else {
+                        Run(tagfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, CalculatePCRproduct, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion);
+                    }
                 } else {
-                    Run(tagfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, CalculatePCRproduct, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion);
+                    System.out.println("\nFailed to open file: " + folder);
                 }
             } else {
-                System.out.println("\nFailed to open file: " + folder);
+                System.out.println("\nFailed to open primer's file: " + primersfile);
             }
-
         } else {
             System.out.println("virtualPCR (2024) by Ruslan Kalendar (ruslan.kalendar@helsinki.fi)\nhttps://github.com/rkalendar/virtualPCR\n");
             System.out.println("Basic usage:");
@@ -207,7 +238,7 @@ public class virtualpcr {
             StringBuilder sr = new StringBuilder(100000);
             //InSilicoPCR2 s2 = new InSilicoPCR2();
             InSilicoPCR3 s2 = new InSilicoPCR3();
-            long startTime = System.nanoTime();
+
             byte[] binaryArray = Files.readAllBytes(Paths.get(tagfile));
             ReadingSequencesFiles rf = new ReadingSequencesFiles(binaryArray);
             if (rf.getNseq() == 0) {
@@ -225,7 +256,7 @@ public class virtualpcr {
             s2.SetShowPrimerAlignment(true);
             s2.SetShowPrimerAlignmentPCRproduct(true);
             s2.SetShowOnlyAmplicons(false);
-            //  s2.SetCTbisulfate(CTconversion);
+            //s2.SetCTbisulfate(CTconversion);
             s2.SetLookR_Fprimes(FRpairs);
             s2.SetShowPCRProducts(pcr_predict);
             //s2.SetShowPCRproductCalculation(CalculatePCRproduct);
@@ -235,17 +266,18 @@ public class virtualpcr {
             s2.SetProductMaxLength(maxlen);
             s2.SetProductMinLength(minlen);
             s2.SetPrimers(PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end);
+            long startTime = System.nanoTime();
             s2.Run();
+            long duration = (System.nanoTime() - startTime) / 1000000000;
             sr.append(s2.getResult());
             System.out.println(sr);
-
+            System.out.println("Time taken: " + duration + " seconds\n\n");
             try (FileWriter fileWriter = new FileWriter(outfile)) {
                 System.out.println("Saving report file: " + outfile);
                 fileWriter.write(sr.toString());
+                fileWriter.write("Time taken: " + duration + " seconds\n\n");
             }
 
-            long duration = (System.nanoTime() - startTime) / 1000000000;
-            System.out.println("Time taken: " + duration + " seconds\n\n");
         } catch (IOException e) {
             System.out.println("Incorrect file name.\n");
         }
