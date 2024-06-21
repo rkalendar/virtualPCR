@@ -26,9 +26,11 @@ public final class ReadingSequencesFiles {
         }
         return name_seq;
     }
+
     public int getNseq() {
         return ns;
     }
+
     private void ReadingSequences() {
         if (source == null) {
             return;
@@ -63,7 +65,7 @@ public final class ReadingSequencesFiles {
             if (source[i] == 62) {
                 if (t > 0) {
 
-                    byte[] d = Arrays.copyOfRange(source, t, i - t);
+                    byte[] d = Arrays.copyOfRange(source, t, i - 1); //public static short[] copyOfRange(short[] original, int from, int to)
                     int x = 0;
                     for (int j = 0; j < d.length; j++) {
                         if (tables.cdn[d[j]] > 0) {
@@ -71,7 +73,7 @@ public final class ReadingSequencesFiles {
                             x++;
                         }
                     }
-                    sequence[n] =new String(Arrays.copyOfRange(d, 0, x));
+                    sequence[n] = new String(Arrays.copyOfRange(d, 0, x));
                     lSeqs = lSeqs + x;
                 }
                 n++;
@@ -85,7 +87,7 @@ public final class ReadingSequencesFiles {
                 }
             }
         }
-        byte[] d = Arrays.copyOfRange(source, t, l - t);
+        byte[] d = Arrays.copyOfRange(source, t, l);
         int x = 0;
         for (int j = 0; j < d.length; j++) {
             if (tables.cdn[d[j]] > 0) {
