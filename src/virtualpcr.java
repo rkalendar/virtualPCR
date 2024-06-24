@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -43,50 +42,63 @@ public class virtualpcr {
             System.out.println("Command-line arguments:");
             try (BufferedReader br = new BufferedReader(new FileReader(infile))) {
                 String line;
-                while ((line = br.readLine()) != null) {
-                    System.out.println(line);
+                while ((line = br.readLine()) != null) {                    
                     line = line.toLowerCase();
                     if (line.contains("targets_path=")) {
                         tagfile = line.substring(13);
+                        System.out.println(line);
                     }
                     if (line.contains("primers_path=")) {
                         primersfile = line.substring(13);
+                        System.out.println(line);
                     }
                     if (line.contains("type=probe")) {
                         isprobe = true;
+                        System.out.println(line);
                     }
                     if (line.contains("molecular=circle")) {
                         iscircle = true;
+                        System.out.println(line);
                     }
                     if (line.contains("linkedsearch=true")) {
                         ispattern = true;
+                        System.out.println(line);
                     }
                     if (line.contains("showprimeralignmentpcrproduct=true")) {
                         PCRmatch_alignment = true;
+                        System.out.println(line);
                     }
                     if (line.contains("sequenceextract=true")) {
                         seqextract = true;
+                        System.out.println(line);
                     }
                     if (line.contains("frpairs=true")) {
                         FRpairs = true;
+                        System.out.println(line);
                     }
                     if (line.contains("showprimeralignment=false")) {
                         alignment = false;
+                        System.out.println(line);
                     }
                     if (line.contains("showpcrproducts=false")) {
                         pcr_predict = false;
+                        System.out.println(line);
                     }
                     if (line.contains("showpcrproductcalculation=true")) {
                         CalculatePCRproduct = true;
+                        System.out.println(line);
                     }
                     if (line.contains("showonlyamplicons=true")) {
                         ShowOnlyAmplicons = true;
+                        System.out.println(line);
                     }
                     if (line.contains("ctconversion=true")) {
                         CTconversion = true;
+                        System.out.println(line);
                     }
                     if (line.contains("number3errors=")) {
                         int h = StrToInt(line.substring(14));
+                        System.out.println(line);
                         if (h < 0) {
                             h = 0;
                         }
@@ -97,6 +109,7 @@ public class virtualpcr {
                     }
                     if (line.contains("minlen=")) {
                         int h = StrToInt(line.substring(6));
+                        System.out.println(line);
                         if (h < 20) {
                             h = 20;
                         }
@@ -107,6 +120,7 @@ public class virtualpcr {
                     }
                     if (line.contains("maxlen=")) {
                         int h = StrToInt(line.substring(6));
+                        System.out.println(line);
                         if (h < minlen) {
                             h = minlen;
                         }
@@ -115,7 +129,6 @@ public class virtualpcr {
                         }
                         maxlen = h;
                     }
-
                 }
             } catch (IOException e) {
             }
@@ -236,8 +249,8 @@ public class virtualpcr {
         try {
 
             StringBuilder sr = new StringBuilder(100000);
-            //InSilicoPCR2 s2 = new InSilicoPCR2();
-            InSilicoPCR3 s2 = new InSilicoPCR3();
+            InSilicoPCR2 s2 = new InSilicoPCR2();
+            //InSilicoPCR3 s2 = new InSilicoPCR3(); //NEW CT-conversation
 
             byte[] binaryArray = Files.readAllBytes(Paths.get(tagfile));
             ReadingSequencesFiles rf = new ReadingSequencesFiles(binaryArray);
@@ -250,8 +263,8 @@ public class virtualpcr {
             System.out.println("\nTarget file name: " + tagfile);
             System.out.println("Target sequence length = " + rf.getLength() + " nt");
             System.out.println("Running...");
-            //s2.SetSequences(rf.getSequences(), rf.getNames());
-            s2.SetSequences(rf.getSequences(), rf.getNames(), CTconversion);
+            s2.SetSequences(rf.getSequences(), rf.getNames());
+            //s2.SetSequences(rf.getSequences(), rf.getNames(), CTconversion);
 
             s2.SetShowPrimerAlignment(true);
             s2.SetShowPrimerAlignmentPCRproduct(true);
