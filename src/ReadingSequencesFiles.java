@@ -26,12 +26,10 @@ public final class ReadingSequencesFiles {
         }
         return name_seq;
     }
-
     public int getNseq() {
         return ns;
     }
-
-    private void ReadingSequences() {
+        private void ReadingSequences() {
         if (source == null) {
             return;
         }

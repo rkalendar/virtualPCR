@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class virtualpcr {
             System.out.println("Command-line arguments:");
             try (BufferedReader br = new BufferedReader(new FileReader(infile))) {
                 String line;
-                while ((line = br.readLine()) != null) {                    
+                while ((line = br.readLine()) != null) {
                     line = line.toLowerCase();
                     if (line.contains("targets_path=")) {
                         tagfile = line.substring(13);
