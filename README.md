@@ -1,5 +1,5 @@
-## virtualPCR v1.0
-## "in silico PCR for simple and complex tasks."
+## virtualPCR 
+## "in silico PCR for simple and complex tasks"
 by Ruslan Kalendar 
 
 email: ruslan.kalendar@helsinki.fi
