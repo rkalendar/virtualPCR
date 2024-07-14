@@ -1,5 +1,5 @@
 targets_path=C:\MyPrograms\Java\virtualPCR\test\8.txt
-primers_path=C:\MyPrograms\Java\virtualPCR\task\8.txt
+primers_path=C:\MyPrograms\Java\virtualPCR\task\primers.txt
 type=probe
 linkedsearch=false/true
 molecular=linear/circle
