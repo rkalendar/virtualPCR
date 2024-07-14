@@ -16,13 +16,3 @@ ShowPCRproductCalculation=true/false
 
 
 java -jar C:\MyPrograms\Java\virtualPCR\dist\virtualPCR.jar C:\MyPrograms\Java\virtualPCR\task\config.file 
-
-
-D:\Genomes\Brachypodium\
-
-C:\MyPrograms\Java\virtualPCR\test\1.txt
-https://www.oracle.com/java/technologies/downloads/
-
-D:\Genomes\Zea_mays
-
-C:\MyPrograms\Java\virtualPCR\test\7.txt
