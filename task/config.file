@@ -1,11 +1,11 @@
-targets_path=C:\MyPrograms\Java\virtualPCR\test\8.txt
-primers_path=C:\MyPrograms\Java\virtualPCR\task\primers.txt
+targets_path=C:\MyPrograms\Java\virtualPCR\test\
+primers_path=C:\MyPrograms\Java\virtualPCR\task\rt.txt
 type=probe
 linkedsearch=false/true
 molecular=linear/circle
 number3errors=1
 minlen=100
-maxlen=3000
+maxlen=500
 FRpairs=false/true
 CTconversion=false
 ShowPrimerAlignment=true
