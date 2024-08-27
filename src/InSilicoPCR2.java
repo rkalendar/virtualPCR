@@ -1,3 +1,4 @@
+
 import java.util.HashMap;
 
 public final class InSilicoPCR2 {
@@ -951,6 +952,7 @@ public final class InSilicoPCR2 {
         int x0 = 0;
         int x1 = 0;
         int x2 = 0;
+        int nampls = 0;
 
         int k = lnk.Amount();
         int l1 = seq[n].length();
@@ -1068,9 +1070,11 @@ public final class InSilicoPCR2 {
                             if (ShowOnlyAmplicons) {
                                 if (PCRproduct1 > mnPCRsize && PCRproduct1 < mxPCRsize) {
                                     map.put(PCRproduct1, Melting.Ta(PCRproduct1, prtm[pn[i]], prtm[pn[j]])); //  adding by sorting and no repeatitions
+                                    nampls++;
                                 }
                                 if (PCRproduct2 > mnPCRsize && PCRproduct2 < mxPCRsize) {
                                     map.put(PCRproduct2, Melting.Ta(PCRproduct2, prtm[pn[i]], prtm[pn[j]]));
+                                    nampls++;
                                 }
                             } else {
                                 if (op[i] == 0) {
@@ -1106,14 +1110,14 @@ public final class InSilicoPCR2 {
             if (ShowOnlyAmplicons && !map.isEmpty()) {
                 java.util.Set set = map.entrySet();
                 java.util.Iterator iterator = set.iterator();
-                sr.append("\nThe number of amplicons = ").append(map.size()).append("\n");
+                sr.append("\nTotal number of amplicons = ").append(nampls).append("\n");
+                sr.append("Number of amplicons of unique size = ").append(map.size()).append(" :\n");
                 while (iterator.hasNext()) {
                     java.util.Map.Entry me2 = (java.util.Map.Entry) iterator.next();
                     sr.append(me2.getKey()).append("bp\t").append("Ta=").append(me2.getValue()).append("°C\n");
                 }
             }
         }
-
     }
 
     private void PrintResult2(LinkList lnk, int n) {
