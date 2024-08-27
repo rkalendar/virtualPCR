@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -138,7 +137,7 @@ public class virtualpcr {
             String[] PrimersName = new String[1];
             String[] PrimersOri = new String[1];
             int n = 1;
-            int t = 0;// t=1 Fasta; t=2 TAB
+            int t = 0;//t=0 Space; t=1 Fasta; t=2 TAB 
 
             try {
                 List<String> lines = Files.readAllLines(Paths.get(primersfile));
@@ -187,7 +186,20 @@ public class virtualpcr {
                                     }
                                 }
                             }
-
+                        }
+                        if (t == 0) {
+                            String[] a = line.split("[ ]+");
+                            if (a.length > 1) {
+                                for (int i = 1; i < a.length; i++) {
+                                    String s = dna.DNA(a[i].toLowerCase());
+                                    if (s.length() > 4) {
+                                        ln.add(a[0]);
+                                        lo.add(a[i]);
+                                        ls.add(s);
+                                        n++;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -248,11 +260,11 @@ public class virtualpcr {
     private static void Run(String tagfile, String[] PrimersList, String[] PrimersName, String[] PrimersOri, boolean isprobe, boolean ispattern, boolean iscircle, boolean seqextract, int Err3end, int minlen, int maxlen, boolean FRpairs, boolean pcr_predict, boolean CalculatePCRproduct, boolean alignment, boolean ShowOnlyAmplicons, boolean PCRmatch_alignment, boolean CTconversion) {
         String outfile = tagfile + ".out";
         try {
+            System.out.println("Running...");
+            System.out.println("\nTarget file name: " + tagfile);
 
             StringBuilder sr = new StringBuilder(100000);
             InSilicoPCR2 s2 = new InSilicoPCR2();
-            //InSilicoPCR3 s2 = new InSilicoPCR3(); //NEW CT-conversation
-
             byte[] binaryArray = Files.readAllBytes(Paths.get(tagfile));
             ReadingSequencesFiles rf = new ReadingSequencesFiles(binaryArray);
             if (rf.getNseq() == 0) {
@@ -261,19 +273,13 @@ public class virtualpcr {
                 System.out.println(">seq1\nactacatactacatcactctctctccgcacag\n");
                 return;
             }
-            System.out.println("\nTarget file name: " + tagfile);
             System.out.println("Target sequence length = " + rf.getLength() + " nt");
-            System.out.println("Running...");
             s2.SetSequences(rf.getSequences(), rf.getNames());
-            //s2.SetSequences(rf.getSequences(), rf.getNames(), CTconversion);
-
             s2.SetShowPrimerAlignment(true);
             s2.SetShowPrimerAlignmentPCRproduct(true);
             s2.SetShowOnlyAmplicons(false);
-            //s2.SetCTbisulfate(CTconversion);
             s2.SetLookR_Fprimes(FRpairs);
             s2.SetShowPCRProducts(pcr_predict);
-            //s2.SetShowPCRproductCalculation(CalculatePCRproduct);
             s2.SetShowPrimerAlignment(alignment);
             s2.SetShowOnlyAmplicons(ShowOnlyAmplicons);
             s2.SetShowPrimerAlignmentPCRproduct(PCRmatch_alignment);
@@ -291,7 +297,6 @@ public class virtualpcr {
                 fileWriter.write(sr.toString());
                 fileWriter.write("Time taken: " + duration + " seconds\n\n");
             }
-
         } catch (IOException e) {
             System.out.println("Incorrect file name.\n");
         }
