@@ -8,14 +8,19 @@ email: ruslan.kalendar@helsinki.fi
 
 ## Availability and requirements:
 
-Operating system(s): Platform independent
-
-Programming language: Java 22 or higher
+Programming language: Java 23 or higher
 
 [Java Downloads](https://www.oracle.com/java/technologies/downloads/)
 
 
 How do I set or change [the Java path system variable](https://www.java.com/en/download/help/path.html)
+
+
+To run the project from the command line. Command-line options, separated by spaces. 
+The executive file is in the ```dist``` directory, which can be copied to any location. 
+Go to the target folder and type the following; an individual file or a file folder can be specified:
+
+```java -jar virtualPCR.jar <target_file_path/Folder_path>```
 
 
 To run the project from the command line, go to the target folder and type the following; an individual file or a file folder can be specified:
