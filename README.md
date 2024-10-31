@@ -4,7 +4,7 @@ by Ruslan Kalendar
 
 email: ruslan.kalendar@helsinki.fi
 
-[Web: online virtualPCR](https://primerdigital.com/tools/)
+[Web: online virtualPCR](https://primerdigital.com/tools/epcr.html)
 
 ## Availability and requirements:
 
