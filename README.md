@@ -18,21 +18,13 @@ How do I set or change [the Java path system variable](https://www.java.com/en/d
 
 To run the project from the command line. Command-line options, separated by spaces. 
 The executive file is in the ```dist``` directory, which can be copied to any location. 
-Go to the target folder and type the following; an individual file or a file folder can be specified:
+The program needs to specify a file containing all the necessary parameters and paths to the files to be analysed. Here for an example the text file ```config.file``` is given. It is necessary to specify the path to this file:
 
 ```java -jar virtualPCR.jar <target_file_path/config.file>```
 
 
-To run the project from the command line, go to the target folder and type the following; an individual file or a file folder can be specified:
-
-```
-java -jar <virtualPCRPath>\dist\virtualPCR.jar <virtualPCRPath>\task\config.file
-
-java -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\task\config.file 
-```
-
 ### Basic usage: 
-To enter parameters and specify the location of the target files and primer's file, you must specify this via a file on the command line. An example of such a file here (file name or extension does not matter):
+To enter parameters and specify the location of the target files and primer's file, you must specify this via a file on the command line. An example of such a file here ```config.file``` (file name or extension does not matter):
 
 > **config.file**
 ```
