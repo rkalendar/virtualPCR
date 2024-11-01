@@ -48,7 +48,7 @@ ShowPCRproductCalculation=true/false
 ```
 
  
-**maxlen=/maxlen=**
+**minlen=/maxlen=**
 > The box of “Minimal and Maximal PCR Product length (bp)” – has the default value of 5000 bp, allowing the user to define the maximal size of the expected PCR product. Any amplicons larger than a defined value will be filtered out. 
 
 **ShowPCRProducts=true/false**
