@@ -20,7 +20,9 @@ To run the project from the command line. Command-line options, separated by spa
 The executive file ```virtualPCR.jar``` is in the ```dist``` directory, which can be copied to any location. 
 The program needs to specify a file containing all the necessary parameters and paths to the files to be analysed. Here for an example the text file ```config.file``` is given. It is necessary to specify the path to this file:
 
-```java -jar virtualPCR.jar <target_file_path/config.file>```
+```java -jar virtualPCR.jar <config.file_path/config.file>```
+
+```java -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\test\config.file```
 
 
 ### Basic usage: 
