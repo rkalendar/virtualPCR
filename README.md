@@ -1,23 +1,23 @@
 ## virtualPCR 
 ## "In silico PCR for simple and complex tasks"
 by Ruslan Kalendar 
-
-email: ruslan.kalendar@helsinki.fi
-
-Online virtualPCR: https://primerdigital.com/tools/epcr.html
+Email: ruslan.kalendar@helsinki.fi
 
 ## Citation reference
 Kalendar R, Shevtsov A, Otarbay Z, Ismailova A 2024. In silico PCR analysis: a comprehensive bioinformatics tool for enhancing nucleic acid amplification assays. Frontiers in Bioinformatics, 4: 1464197. DOI:10.3389/fbinf.2024.1464197
+https://www.frontiersin.org/journals/bioinformatics/articles/10.3389/fbinf.2024.1464197/full
+
+## Online virtualPCR: 
+https://primerdigital.com/tools/epcr.html
+
 
 ## Availability and requirements:
-
 Programming language: Java 23 or higher
+Java Downloads: 
+https://www.oracle.com/java/technologies/downloads/
 
-[Java Downloads](https://www.oracle.com/java/technologies/downloads/)
-
-
-How do I set or change [the Java path system variable](https://www.java.com/en/download/help/path.html)
-
+How do I set or change the Java path system variable: 
+https://www.java.com/en/download/help/path.html
 
 To run the project from the command line. Command-line options, separated by spaces. 
 The executive file ```virtualPCR.jar``` is in the ```dist``` directory, which can be copied to any location. 
