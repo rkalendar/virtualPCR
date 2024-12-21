@@ -1,10 +1,13 @@
 ## virtualPCR 
-## "in silico PCR for simple and complex tasks"
+## "In silico PCR for simple and complex tasks"
 by Ruslan Kalendar 
 
 email: ruslan.kalendar@helsinki.fi
 
-[Web: online virtualPCR](https://primerdigital.com/tools/epcr.html)
+Online virtualPCR: https://primerdigital.com/tools/epcr.html
+
+## Citation reference
+Kalendar R, Shevtsov A, Otarbay Z, Ismailova A 2024. In silico PCR analysis: a comprehensive bioinformatics tool for enhancing nucleic acid amplification assays. Frontiers in Bioinformatics, 4: 1464197. DOI:10.3389/fbinf.2024.1464197
 
 ## Availability and requirements:
 
