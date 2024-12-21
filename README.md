@@ -10,7 +10,6 @@ https://www.frontiersin.org/journals/bioinformatics/articles/10.3389/fbinf.2024.
 ## Online virtualPCR: 
 https://primerdigital.com/tools/epcr.html
 
-
 ## Availability and requirements:
 Programming language: Java 23 or higher
 Java Downloads: 
