@@ -3,6 +3,8 @@
 by Ruslan Kalendar 
 Email: ruslan.kalendar@helsinki.fi
 
+In silico PCR analysis is a valuable and productive adjunctive approach for ensuring primer or probe specificity across a broad spectrum of PCR applications encompassing gene discovery through homology analysis, molecular diagnostics, DNA profiling, and repeat sequence identification. The prediction of primer, probe and microRNA (miRNA) sensitivity and specificity necessitates thorough database searches, accounting for an optimal balance of mismatch tolerance, sequence similarity, and thermal stability. This software facilitates in silico PCR analyses of both linear and circular DNA templates, including bisulfited treatment DNA, enabling multiple primer or probe searches within databases of varying scales alongside advanced search functionalities. This tool is suitable for processing batch files and is essential for automation when working with large amounts of data.
+
 ## Citation reference
 Kalendar R, Shevtsov A, Otarbay Z, Ismailova A 2024. In silico PCR analysis: a comprehensive bioinformatics tool for enhancing nucleic acid amplification assays. Frontiers in Bioinformatics, 4: 1464197. DOI:10.3389/fbinf.2024.1464197
 https://www.frontiersin.org/journals/bioinformatics/articles/10.3389/fbinf.2024.1464197/full
@@ -94,7 +96,7 @@ ShowPCRproductCalculation=true/false
 > “Linked (Associated) search” - programmable searching when binding sites for primers or probes are searched within a determined distance. This criterion will be described in detail herein below.
 
 **type=primer/probe**
-> “Probe search” – helps the user execute searching of binding sites not only for primers but also for probes (TaqMan, Molecular Beacon, microarrays, etc.). This option is recommended in the cases when primer binding sites were not found or for searching for binding sites of probes for which the complementarity is expected only for part of the sequence, for example, in “Molecular Beacon” (both termini have not complementary regions to the target).
+> “Probe search” – helps the user execute searching of binding sites not only for primers but also for probes (TaqMan, Molecular Beacon, microRNA (miRNA), microarrays, etc.). This option is recommended in the cases when primer binding sites were not found or for searching for binding sites of probes for which the complementarity is expected only for part of the sequence, for example, in “Molecular Beacon” (both termini have not complementary regions to the target).
 
  
 
@@ -107,7 +109,7 @@ Sequence data files are prepared using a text editor and saved in ASCII as text/
 A sequence in FASTA format consists of:
 One line starts with a ">" sign and a sequence identification code. A textual description of the sequence optionally follows it. Since it is not part of the official format description, the software can ignore it when it is present.
 One or more lines containing the sequence itself. A file in FASTA format may comprise more than one sequence.
-The input DNA sequence can contain the degenerate nucleotides accepted as IUPAC code, an extended vocabulary of 11 letters, which allows the description of ambiguous DNA code. Each letter represents a combination of one or several nucleotides: M (A/C), R (A/G), W (A/T), S (G/C), Y (C/T), K (G/T), V (A/G/C), H (A/C/T), D (A/G/T), B (C/G/T), N (A/G/C/T).
+The input DNA sequence can contain the degenerate nucleotides accepted as IUPAC code, an extended vocabulary of 11 letters, which allows the description of ambiguous DNA code. Each letter represents a combination of one or several nucleotides: M (A/C), R (A/G), W (A/T), S (G/C), Y (C/T), K (G/T), V (A/G/C), H (A/C/T), D (A/G/T), B (C/G/T), N (A/G/C/T), U (Uracil), I(Inosine). LNA: dA=E, dC=F, dG=J, dT=L.
 
 
 ## The output is saved in tab-delimited, plain text files. 
