@@ -103,7 +103,7 @@ ShowPCRproductCalculation=true/false
 
 ## Sequence Entry:
 
-Sequence data files are prepared using a text editor and saved in ASCII as text/plain format (.txt) or in .fasta or without file extensions (a file extension is not obligatory). The program takes a single sequence or accepts multiple DNA sequences in FASTA format. The template length is not limited.
+Sequence data files are prepared using a text editor and saved in ASCII as text/plain format (.txt) or in .fasta or without file extensions (a file extension is not obligatory). The program takes a single sequence or accepts multiple DNA/RNA sequences in FASTA format. The template length is not limited.
 
 ## FASTA format description:
 A sequence in FASTA format consists of:
