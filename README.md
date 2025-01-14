@@ -109,7 +109,7 @@ Sequence data files are prepared using a text editor and saved in ASCII as text/
 A sequence in FASTA format consists of:
 One line starts with a ">" sign and a sequence identification code. A textual description of the sequence optionally follows it. Since it is not part of the official format description, the software can ignore it when it is present.
 One or more lines containing the sequence itself. A file in FASTA format may comprise more than one sequence.
-The input DNA sequence can contain the degenerate nucleotides accepted as IUPAC code, an extended vocabulary of 11 letters, which allows the description of ambiguous DNA code. Each letter represents a combination of one or several nucleotides: M (A/C), R (A/G), W (A/T), S (G/C), Y (C/T), K (G/T), V (A/G/C), H (A/C/T), D (A/G/T), B (C/G/T), N (A/G/C/T), U (Uracil), I(Inosine). LNA: dA=E, dC=F, dG=J, dT=L.
+The input DNA sequence can contain the degenerate nucleotides accepted as IUPAC code, an extended vocabulary of 11 letters, which allows the description of ambiguous DNA code. Each letter represents a combination of one or several nucleotides: M (A/C), R (A/G), W (A/T), S (G/C), Y (C/T), K (G/T), V (A/G/C), H (A/C/T), D (A/G/T), B (C/G/T), N (A/G/C/T), U (Uracil), I (Inosine). LNA: dA=E, dC=F, dG=J, dT=L.
 
 
 ## The output is saved in tab-delimited, plain text files. 
