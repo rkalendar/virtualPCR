@@ -94,10 +94,15 @@ ShowPCRproductCalculation=true/false
 
 **linkedsearch=false/true**
 > “Linked (Associated) search” - programmable searching when binding sites for primers or probes are searched within a determined distance. This criterion will be described in detail herein below.
-Data format for using this feature:
+In linked searching, the search criteria are based only on the distance between forward sites. Linked searching can perform a broader variety of tasks ranging from conventional sequence matching to in silico PCR and general tasks involving DNA sequence analysis with approximate matching. To give a better idea of how linked searching works in practice, we will use the above example of in silico PCR with two degenerate Copia-type RT primers. Let us convert the primer sequences into a single line, where forward primer sequence (5′-CARATGGAYGTNAARAC) is followed by expected distance between primer binding sites (200–300 nt) and a complementary sequence (TAYGTNGAYGAYATG) of the reverse primer (5′-CATRTCRTCNACRTA): 
 ```
 >RT+(QMDVK)_RT-(YVDDML)
 CARATGGAYGTNAARAC[200-300]TAYGTNGAYGAYATG
+
+
+>RT+(QMDVK)_RT-(YVDDML)
+CARATGGAYGTNAARAC[300]TAYGTNGAYGAYATG
+
 ```
 **type=primer/probe**
 > “Probe search” – helps the user execute searching of binding sites not only for primers but also for probes (TaqMan, Molecular Beacon, microRNA (miRNA), microarrays, etc.). This option is recommended in the cases when primer binding sites were not found or for searching for binding sites of probes for which the complementarity is expected only for part of the sequence, for example, in “Molecular Beacon” (both termini have not complementary regions to the target).
