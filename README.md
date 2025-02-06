@@ -105,7 +105,7 @@ CARATGGAYGTNAARAC[300]TAYGTNGAYGAYATG
 
 or if it is specified that the second sequence should be made complementary:
 
->RT+(QMDVK)
+>RT+(QMDVK)_RT-(YVDDML)
 CARATGGAYGTNAARAC[300]@CATRTCRTCNACRTA
 ```
 
