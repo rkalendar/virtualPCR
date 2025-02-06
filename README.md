@@ -96,8 +96,8 @@ ShowPCRproductCalculation=true/false
 > “Linked (Associated) search” - programmable searching when binding sites for primers or probes are searched within a determined distance. This criterion will be described in detail herein below.
 Data format for using this feature:
 ```
->Cassandra_search
-RGTTAAGYRHGY[15-25]RRRATRGGTRACY[5-200]tggtatcagagc
+>RT+(QMDVK)_RT-(YVDDML)
+CARATGGAYGTNAARAC[200−300]TAYGTNGAYGAYATG
 ```
 **type=primer/probe**
 > “Probe search” – helps the user execute searching of binding sites not only for primers but also for probes (TaqMan, Molecular Beacon, microRNA (miRNA), microarrays, etc.). This option is recommended in the cases when primer binding sites were not found or for searching for binding sites of probes for which the complementarity is expected only for part of the sequence, for example, in “Molecular Beacon” (both termini have not complementary regions to the target).
