@@ -95,7 +95,8 @@ ShowPCRproductCalculation=true/false
 **linkedsearch=false/true**
 > “Linked (Associated) search” - programmable searching when binding sites for primers or probes are searched within a determined distance. This criterion will be described in detail herein below.
 Data format for using this feature:
-```>Cassandra_search
+```
+>Cassandra_search
 RGTTAAGYRHGY[15-25]RRRATRGGTRACY[5-200]tggtatcagagc
 ```
 **type=primer/probe**
