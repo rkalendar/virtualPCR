@@ -7,4 +7,4 @@ Go to the target folder and type the following; an individual file or a file fol
 
 To run the project from the command line, go to the dist folder and type the following:
 
-java -jar virtualPCR.jar <target_file_path/Folder_path>  
+java -jar virtualPCR.jar <config_file_path>  
