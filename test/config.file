@@ -1,4 +1,4 @@
-targets_path=C:\virtualPCR\test\7.txt
+targets_path=C:\virtualPCR\test\ch02.fasta
 primers_path=C:\virtualPCR\test\rt.txt
 type=primer
 linkedsearch=false/true
@@ -15,4 +15,4 @@ ShowPCRProducts=true/false
 ShowPrimerAlignmentPCRproduct=true/false 
 ShowPCRproductCalculation=true/false
 
-java -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\task\config.file 
+java -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\task\config.file
