@@ -1,0 +1,5 @@
+>605_copia-like_RT_gene(QMDVK)  RT+  
+caratggaygtnaarac
+
+>606_copia-like_RT_gene(YVDDML) RT- 
+catrtcrtcnacrta
