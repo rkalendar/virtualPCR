@@ -86,10 +86,10 @@ ShowPCRproductCalculation=true/false
 > “Show alignment only for matching primers for PCR product” - all primer binding sites were represented in the previous option. In this case, the primer and target alignment analysis will be shown only for matching primers.
 
 **ShowOnlyAmplicons=true/false**
-“Show only amplicon lengths” – checking this option allows the user to collect only amplicon lengths without primer and target alignment analysis. This option is recommended for in silico PCR of the whole genome, including all chromosome analysis with highly abandoned repeated sequences (in silico PCR for techniques based on repeats: iPBS, IRAP, ISSR or RAPD).
+> “Show only amplicon lengths” – checking this option allows the user to collect only amplicon lengths without primer and target alignment analysis. This option is recommended for in silico PCR of the whole genome, including all chromosome analysis with highly abandoned repeated sequences (in silico PCR for techniques based on repeats: iPBS, IRAP, ISSR or RAPD).
 
 **LinkedSearch=false/true**
->"Linked (Associated) Search" - programmable search where binding sites are searched for linked sequences within a specified distance. In linked searching, the search criteria are based only on the distance between forward sites. Linked searching can perform a wider variety of tasks, ranging from conventional sequence matching to in silico PCR and general DNA sequence analysis tasks involving approximate matching.
+> "Linked (Associated) Search" - programmable search where binding sites are searched for linked sequences within a specified distance. In linked searching, the search criteria are based only on the distance between forward sites. Linked searching can perform a wider variety of tasks, ranging from conventional sequence matching to in silico PCR and general DNA sequence analysis tasks involving approximate matching.
 > To better understand how Linked Search works in practice, we use the example of an in silico PCR with two degenerate Copia-type RT primers. The primer sequences were converted into a single line where the forward primer sequence (5′-CARATGGAYGTNAARAC) was followed by the expected distance between the primer binding sites (200-300 nt) and the complementary sequence (TAYGTNGAYGAYATG) of the reverse primer (5′-CATRTCRTCNACRTA):    
 ```
 >RT+(QMDVK)_RT-(YVDDML)
