@@ -24,10 +24,7 @@ To run the project from the command line. Command-line options, separated by spa
 The executive file ```virtualPCR.jar``` is in the ```dist``` directory, which can be copied to any location. 
 The program needs to specify a file containing all the necessary parameters and paths to the files to be analysed. Here for an example the text file ```config.file``` is given. It is necessary to specify the path to this file:
 
-```java -jar virtualPCR.jar <config.file_path/config.file>```
-
 ```java -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\test\config.file```
-
 
 ### Basic usage: 
 To enter parameters and specify the location of the target files and primer's file, you must specify this via a file on the command line. An example of such a file here ```config.file``` (file name or extension does not matter):
@@ -36,19 +33,18 @@ To enter parameters and specify the location of the target files and primer's fi
 ```
 targets_path=C:\virtualPCR\test\ch02.fasta
 primers_path=C:\virtualPCR\test\rt.txt
-type=primer/probe
+type=primer
 linkedsearch=false/true
 molecular=linear/circle
 number3errors=1
 minlen=200
-maxlen=500 
+maxlen=500
 FRpairs=false/true
-SequenceExtract=false/true
 CTconversion=false/true
-ShowPrimerAlignment=true/false
+SequenceExtract=true
+ShowPrimerAlignment=true
 ShowOnlyAmplicons=true/false
 ShowPCRProducts=true/false
-ShowPrimerAlignment=true/false
 ShowPrimerAlignmentPCRproduct=true/false 
 ShowPCRproductCalculation=true/false
 ```
