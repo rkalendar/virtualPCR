@@ -1,45 +1,18 @@
-targets_path=E:\Genomes\Oryza_sativa\CM000126.fasta
-primers_path=C:\MyPrograms\Java\virtualPCR\test\rt_c2.txt
+targets_path=C:\virtualPCR\test\7.txt
+primers_path=C:\virtualPCR\test\rt.txt
 type=primer
-linkedsearch=true
+linkedsearch=false/true
 molecular=linear/circle
-number3errors=1
-minlen=50
-maxlen=600
+number3errors=0
+minlen=200
+maxlen=500
 FRpairs=false/true
 CTconversion=false/true
 SequenceExtract=true
-ShowPrimerAlignment=true/false
+ShowPrimerAlignment=false
 ShowOnlyAmplicons=true/false
 ShowPCRProducts=true/false
 ShowPrimerAlignmentPCRproduct=true/false 
 ShowPCRproductCalculation=true/false
 
-
-java -jar C:\MyPrograms\Java\virtualPCR\dist\virtualPCR.jar C:\MyPrograms\Java\virtualPCR\test\config.file 
-
-C:\graalvm-jdk-22.0.1+8.1\bin\java -jar C:\MyPrograms\Java\virtualPCR\dist\virtualPCR.jar C:\MyPrograms\Java\virtualPCR\test\config.file 
-
-E:\Genomes\Brachypodium\
-
-C:\MyPrograms\Java\virtualPCR\test\1.txt
-https://www.oracle.com/java/technologies/downloads/
-
-E:\Genomes\Zea_mays
-
-C:\MyPrograms\Java\virtualPCR\test\7.txt
-
-E:\Genomes\Zea_mays\CM000786.fasta
-
-E:\Genomes\GRCh38.p14\ch01.fasta
-E:\Genomes\Viruses\MF782455.txt
-E:\Genomes\Zea_mays\CM000786.fasta
-
-E:\Genomes\GRCh38.p14\ch01.fasta
-E:\Genomes\Hordeum_vulgare\1H.fasta
-
-E:\Genomes\Oryza_sativa\CM000126.fasta
-C:\MyPrograms\Java\virtualPCR\test\mite1.txt
-
-Triticum_dicoccoides
-E:\Genomes\Brachypodium\
+java -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\task\config.file 
