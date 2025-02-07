@@ -34,14 +34,14 @@ To enter parameters and specify the location of the target files and primer's fi
 
 > **config.file**
 ```
-targets_path=C:\virtualPCR\test\1.txt
-primers_path=C:\virtualPCR\task\primers.txt
+targets_path=C:\virtualPCR\test\ch02.fasta
+primers_path=C:\virtualPCR\test\rt.txt
 type=primer/probe
 linkedsearch=false/true
 molecular=linear/circle
-number3errors=0
-minlen=100
-maxlen=5000 
+number3errors=1
+minlen=200
+maxlen=500 
 FRpairs=false/true
 SequenceExtract=false/true
 CTconversion=false/true
