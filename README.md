@@ -33,7 +33,7 @@ To enter parameters and specify the location of the target files and primer's fi
 ```
 targets_path=C:\virtualPCR\test\ch02.fasta
 primers_path=C:\virtualPCR\test\rt.txt
-type=primer
+type=primer/probe
 linkedsearch=false/true
 molecular=linear/circle
 number3errors=1
@@ -88,7 +88,7 @@ ShowPCRproductCalculation=true/false
 **ShowOnlyAmplicons=true/false**
 > “Show only amplicon lengths” – checking this option allows the user to collect only amplicon lengths without primer and target alignment analysis. This option is recommended for in silico PCR of the whole genome, including all chromosome analysis with highly abandoned repeated sequences (in silico PCR for techniques based on repeats: iPBS, IRAP, ISSR or RAPD).
 
-**LinkedSearch=false/true**
+**LinkedSearch=true**
 > "Linked (Associated) Search" - programmable search where binding sites are searched for linked sequences within a specified distance. In linked searching, the search criteria are based only on the distance between forward sites. Linked searching can perform a wider variety of tasks, ranging from conventional sequence matching to in silico PCR and general DNA sequence analysis tasks involving approximate matching.
 > To better understand how Linked Search works in practice, we use the example of an in silico PCR with two degenerate Copia-type RT primers. The primer sequences were converted into a single line where the forward primer sequence (5′-CARATGGAYGTNAARAC) was followed by the expected distance between the primer binding sites (200-300 nt) and the complementary sequence (TAYGTNGAYGAYATG) of the reverse primer (5′-CATRTCRTCNACRTA):    
 ```
@@ -106,7 +106,7 @@ or if it is specified that the second sequence should be made complementary:
 CARATGGAYGTNAARAC[300]@CATRTCRTCNACRTA
 ```
 
-**type=primer/probe**
+**type=probe**
 > “Probe search” – helps the user execute searching of binding sites not only for primers but also for probes (TaqMan, Molecular Beacon, microRNA (miRNA), microarrays, etc.). This option is recommended in the cases when primer binding sites were not found or for searching for binding sites of probes for which the complementarity is expected only for part of the sequence, for example, in “Molecular Beacon” (both termini have not complementary regions to the target).
 
  
