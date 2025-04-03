@@ -20,6 +20,10 @@ https://www.oracle.com/java/technologies/downloads/
 How do I set or change the Java path system variable: 
 https://www.java.com/en/download/help/path.html
 
+If you are analyzing a specific genome, you have to download individually each chromosome in FASTA format from the website:
+https://www.ncbi.nlm.nih.gov/datasets/genome/
+
+
 To run the project from the command line. Command-line options, separated by spaces. 
 The executive file ```virtualPCR.jar``` is in the ```dist``` directory, which can be copied to any location. 
 The program needs to specify a file containing all the necessary parameters and paths to the files to be analysed. Here for an example the text file ```config.file``` is given. It is necessary to specify the path to this file:
