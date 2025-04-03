@@ -23,6 +23,9 @@ https://www.java.com/en/download/help/path.html
 If you are analyzing a specific genome, you have to download individually each chromosome in FASTA format from the website:
 https://www.ncbi.nlm.nih.gov/datasets/genome/
 
+For example, the human genome (genome assembly T2T-CHM13v2.0), there are individual files for each chromosome below the page, or via FTP: 
+https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_009914755.1/
+
 
 To run the project from the command line. Command-line options, separated by spaces. 
 The executive file ```virtualPCR.jar``` is in the ```dist``` directory, which can be copied to any location. 
