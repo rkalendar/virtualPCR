@@ -33,6 +33,10 @@ The program needs to specify a file containing all the necessary parameters and 
 
 ```java -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\test\config.file```
 
+Large genome usage (you will have to show the program to use more RAM, for example as listed here, up to 16-32 Gb memory: -Xms4g -Xmx32g):
+
+```java -jar -Xms4g -Xmx16g C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\test\config.file```
+
 ### Basic usage: 
 To enter parameters and specify the location of the target files and primer's file, you must specify this via a file on the command line. An example of such a file here ```config.file``` (file name or extension does not matter):
 
