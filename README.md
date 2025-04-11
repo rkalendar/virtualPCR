@@ -33,7 +33,7 @@ The program needs to specify a file containing all the necessary parameters and 
 
 ```java -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\test\config.file```
 
-Large genome usage (you will have to show the program to use more RAM, for example as listed here, up to 16-32 Gb memory: -Xms4g -Xmx32g):
+Large genome usage (you will have to show the program to use more RAM, for example as listed here, up to 16-32 Gb memory: -Xms4g -Xmx16g):
 
 ```java -jar -Xms4g -Xmx16g C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\test\config.file```
 
@@ -47,6 +47,7 @@ primers_path=C:\virtualPCR\test\rt.txt
 type=primer/probe
 linkedsearch=false/true
 molecular=linear/circle
+primerstatistic=true
 number3errors=1
 minlen=200
 maxlen=500
