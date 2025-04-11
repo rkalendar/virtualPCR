@@ -37,19 +37,27 @@ public class virtualpcr {
             boolean ShowOnlyAmplicons = false;       //SetShowOnlyAmplicons
             boolean PCRmatch_alignment = true;       //SetShowPrimerAlignmentPCRproduct
             boolean CTconversion = false;            //CTconversion=false/true
+            boolean PrimerStatistic = true;          //Statistic report for each primer
 
             System.out.println("Current Directory: " + System.getProperty("user.dir"));
             System.out.println("Command-line arguments:");
             try (BufferedReader br = new BufferedReader(new FileReader(infile))) {
                 String line;
+
                 while ((line = br.readLine()) != null) {
+                    String cline = line;
                     line = line.toLowerCase();
+
                     if (line.contains("targets_path=")) {
-                        tagfile = line.substring(13);
-                        System.out.println(line);
+                        tagfile = cline.substring(13).trim();
+                        System.out.println(tagfile);
                     }
                     if (line.contains("primers_path=")) {
-                        primersfile = line.substring(13);
+                        primersfile = cline.substring(13).trim();
+                        System.out.println(primersfile);
+                    }
+                    if (line.contains("primerstatistic=false")) {
+                        PrimerStatistic = false;
                         System.out.println(line);
                     }
                     if (line.contains("type=probe")) {
@@ -167,7 +175,7 @@ public class virtualpcr {
                         if (t == 1) {
                             if (line.contains(">")) {
                                 n++;
-                                ln.add(line.trim());
+                                ln.add(line.substring(1).trim());
                             } else {
                                 lo.add(line.trim());
                                 ls.add(dna.DNA(line.toLowerCase()));
@@ -225,7 +233,7 @@ public class virtualpcr {
                 File folder = new File(tagfile);
                 if (folder.exists() && (folder.isDirectory() || folder.isFile())) {
                     if (folder.isDirectory()) {
-                        String globalfile = folder.getPath() + File.separator + "report.out";
+                        String globalfile = folder.getPath().trim() + File.separator + "report.out";
 
                         File[] files = folder.listFiles();
                         int k = -1;
@@ -239,7 +247,7 @@ public class virtualpcr {
                         try (FileWriter fileWriter1 = new FileWriter(globalfile)) {
                             for (String nfile : filelist) {
                                 try {
-                                    StringBuilder sr = Run(nfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, CalculatePCRproduct, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion);
+                                    StringBuilder sr = Run(nfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, CalculatePCRproduct, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion, PrimerStatistic);
                                     fileWriter1.write(sr.toString());
                                     fileWriter1.write("\n\n");
                                 } catch (IOException e) {
@@ -251,7 +259,7 @@ public class virtualpcr {
                         }
 
                     } else {
-                        StringBuilder sr = Run(tagfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, CalculatePCRproduct, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion);
+                        StringBuilder sr = Run(tagfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, CalculatePCRproduct, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion, PrimerStatistic);
                     }
                 } else {
                     System.out.println("\nFailed to open file: " + folder);
@@ -260,13 +268,13 @@ public class virtualpcr {
                 System.out.println("\nFailed to open primer's file: " + primersfile);
             }
         } else {
-            System.out.println("virtualPCR (2024) by Ruslan Kalendar (ruslan.kalendar@helsinki.fi)\nhttps://github.com/rkalendar/virtualPCR\n");
+            System.out.println("virtualPCR (2024-2025) by Ruslan Kalendar (ruslan.kalendar@helsinki.fi)\nhttps://github.com/rkalendar/virtualPCR\n");
             System.out.println("Basic usage:");
             System.out.println("java -jar \\virtualPCR\\dist\\virtualPCR.jar \\virtualPCR\\task\\config.file");
         }
     }
 
-    private static StringBuilder Run(String tagfile, String[] PrimersList, String[] PrimersName, String[] PrimersOri, boolean isprobe, boolean ispattern, boolean iscircle, boolean seqextract, int Err3end, int minlen, int maxlen, boolean FRpairs, boolean pcr_predict, boolean CalculatePCRproduct, boolean alignment, boolean ShowOnlyAmplicons, boolean PCRmatch_alignment, boolean CTconversion) {
+    private static StringBuilder Run(String tagfile, String[] PrimersList, String[] PrimersName, String[] PrimersOri, boolean isprobe, boolean ispattern, boolean iscircle, boolean seqextract, int Err3end, int minlen, int maxlen, boolean FRpairs, boolean pcr_predict, boolean CalculatePCRproduct, boolean alignment, boolean ShowOnlyAmplicons, boolean PCRmatch_alignment, boolean CTconversion, boolean PrimerStatistic) {
         String outfile = tagfile + ".out";
         StringBuilder sr = new StringBuilder();
         try {
@@ -285,9 +293,7 @@ public class virtualpcr {
             System.out.println("Target sequence length = " + rf.getLength() + " nt");
             s2.SetSequences(rf.getSequences(), rf.getNames());
             s2.SetCurrentFileName(tagfile);
-            s2.SetShowPrimerAlignment(true);
-            s2.SetShowPrimerAlignmentPCRproduct(true);
-            s2.SetShowOnlyAmplicons(false);
+            s2.SetPrimerStat(PrimerStatistic);
             s2.SetLookR_Fprimes(FRpairs);
             s2.SetShowPCRProducts(pcr_predict);
             s2.SetShowPrimerAlignment(alignment);
