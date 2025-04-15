@@ -58,15 +58,16 @@ ShowPrimerAlignment=true
 ShowOnlyAmplicons=true/false
 ShowPCRProducts=true/false
 ShowPrimerAlignmentPCRproduct=true/false 
-ShowPCRproductCalculation=true/false
 ```
 
+**type=probe**
+> “Probe search” – helps the user execute searching of binding sites not only for primers but also for probes (TaqMan, Molecular Beacon, microRNA (miRNA), CRISPR-Cas guide RNA target, microarrays, etc.). This option is recommended in the cases when primer binding sites were not found or for searching for binding sites of probes for which the complementarity is expected only for part of the sequence, for example, in “Molecular Beacon” (both termini have not complementary regions to the target).
  
 **minlen=/maxlen=**
 > The box of “Minimal and Maximal PCR Product length (bp)” – has the default value of 5000 bp, allowing the user to define the maximal size of the expected PCR product. Any amplicons larger than a defined value will be filtered out. 
 
 **ShowPCRProducts=true/false**
-> “PCR product prediction” has the default value checked; to search for primer binding sites without further analysis of potential PCR fragments, this option should be disabled.
+> “PCR product prediction” has the default value true; to search for primer binding sites without further analysis of potential PCR fragments, this option should be disabled.
 
 **molecular=linear/circle**
 >“Circular sequence” – analysis of circular molecules (plasmid, mitochondria or plastids DNA, etc.); in this case, the primers can produce one or two amplicons.
@@ -92,7 +93,7 @@ ShowPCRproductCalculation=true/false
 ```
 
 **ShowPrimerAlignment=true/false**
-> “Show all matching for primers alignment” - checked by default, the software shows the result, including all matching of stable binding primer to the target. Not in all cases combinations of primers can produce the PCR products in the current assay conditions. Still, the user can examine the stability of primer binding sites, orientation and coordinates in the target.
+> “Show all matching for primers alignment” - true by default, the software shows the result, including all matching of stable binding primer to the target. Not in all cases combinations of primers can produce the PCR products in the current assay conditions. Still, the user can examine the stability of primer binding sites, orientation and coordinates in the target.
 
 **ShowPrimerAlignmentPCRproduct=true/false** 
 > “Show alignment only for matching primers for PCR product” - all primer binding sites were represented in the previous option. In this case, the primer and target alignment analysis will be shown only for matching primers.
@@ -118,14 +119,7 @@ or if it is specified that the second sequence should be made complementary:
 CARATGGAYGTNAARAC[300]@CATRTCRTCNACRTA
 ```
 
-**type=probe**
-> “Probe search” – helps the user execute searching of binding sites not only for primers but also for probes (TaqMan, Molecular Beacon, microRNA (miRNA), CRISPR-Cas guide RNA target, microarrays, etc.). This option is recommended in the cases when primer binding sites were not found or for searching for binding sites of probes for which the complementarity is expected only for part of the sequence, for example, in “Molecular Beacon” (both termini have not complementary regions to the target).
-
- 
-
-
 ## Sequence Entry:
-
 Sequence data files are prepared using a text editor and saved in ASCII as text/plain format (.txt) or in .fasta or without file extensions (a file extension is not obligatory). The program takes a single sequence or accepts multiple DNA/RNA sequences in FASTA format. The template length is not limited.
 
 ## FASTA format description:
@@ -134,9 +128,7 @@ One line starts with a ">" sign and a sequence identification code. A textual de
 One or more lines containing the sequence itself. A file in FASTA format may comprise more than one sequence.
 The input DNA/RNA sequence can contain the degenerate nucleotides accepted as IUPAC code, an extended vocabulary of 13 letters, which allows the description of ambiguous DNA code. Each letter represents a combination of one or several nucleotides: M (A/C), R (A/G), W (A/T), S (G/C), Y (C/T), K (G/T), V (A/G/C), H (A/C/T), D (A/G/T), B (C/G/T), N (A/G/C/T), U (Uracil), I (Inosine). LNA: dA=E, dC=F, dG=J, dT=L.
 
-
 ## The output is saved in tab-delimited, plain text files. 
-
 
 ## In silico PCR application, primers file examples:
 
@@ -175,5 +167,3 @@ TCAAGCTATGCATCCAACGCG
 >L_T7 
 TAGGGCGAATTGGGCCCGACG
 ```
-
-
