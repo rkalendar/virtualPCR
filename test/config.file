@@ -3,7 +3,7 @@ primers_path=C:\virtualPCR\test\rt.txt
 type=primer
 linkedsearch=false/true
 molecular=linear/circle
-number3errors=1
+number3errors=0
 minlen=200
 maxlen=500
 FRpairs=false/true
@@ -13,6 +13,6 @@ ShowPrimerAlignment=true
 ShowOnlyAmplicons=true/false
 ShowPCRProducts=true/false
 ShowPrimerAlignmentPCRproduct=true/false 
-ShowPCRproductCalculation=true/false
 
+example for command line:
 java -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\task\config.file
