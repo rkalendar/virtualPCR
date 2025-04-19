@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -32,7 +33,6 @@ public class virtualpcr {
             boolean seqextract = false;
             boolean FRpairs = false;                 //SetLookR_Fprimes
             boolean pcr_predict = true;              //SetShowPCRProducts
-            boolean CalculatePCRproduct = false;     //SetShowPCRproductCalculation
             boolean alignment = true;                //SetShowPrimerAlignment
             boolean ShowOnlyAmplicons = false;       //SetShowOnlyAmplicons
             boolean PCRmatch_alignment = true;       //SetShowPrimerAlignmentPCRproduct
@@ -92,10 +92,7 @@ public class virtualpcr {
                         pcr_predict = false;
                         System.out.println(line);
                     }
-                    if (line.contains("showpcrproductcalculation=true")) {
-                        CalculatePCRproduct = true;
-                        System.out.println(line);
-                    }
+
                     if (line.contains("showonlyamplicons=true")) {
                         ShowOnlyAmplicons = true;
                         System.out.println(line);
@@ -247,7 +244,7 @@ public class virtualpcr {
                         try (FileWriter fileWriter1 = new FileWriter(globalfile)) {
                             for (String nfile : filelist) {
                                 try {
-                                    StringBuilder sr = Run(nfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, CalculatePCRproduct, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion, PrimerStatistic);
+                                    StringBuilder sr = Run(nfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion, PrimerStatistic);
                                     fileWriter1.write(sr.toString());
                                     fileWriter1.write("\n\n");
                                 } catch (IOException e) {
@@ -259,7 +256,7 @@ public class virtualpcr {
                         }
 
                     } else {
-                        StringBuilder sr = Run(tagfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, CalculatePCRproduct, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion, PrimerStatistic);
+                        StringBuilder sr = Run(tagfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion, PrimerStatistic);
                     }
                 } else {
                     System.out.println("\nFailed to open file: " + folder);
@@ -274,7 +271,7 @@ public class virtualpcr {
         }
     }
 
-    private static StringBuilder Run(String tagfile, String[] PrimersList, String[] PrimersName, String[] PrimersOri, boolean isprobe, boolean ispattern, boolean iscircle, boolean seqextract, int Err3end, int minlen, int maxlen, boolean FRpairs, boolean pcr_predict, boolean CalculatePCRproduct, boolean alignment, boolean ShowOnlyAmplicons, boolean PCRmatch_alignment, boolean CTconversion, boolean PrimerStatistic) {
+    private static StringBuilder Run(String tagfile, String[] PrimersList, String[] PrimersName, String[] PrimersOri, boolean isprobe, boolean ispattern, boolean iscircle, boolean seqextract, int Err3end, int minlen, int maxlen, boolean FRpairs, boolean pcr_predict, boolean alignment, boolean ShowOnlyAmplicons, boolean PCRmatch_alignment, boolean CTconversion, boolean PrimerStatistic) {
         String outfile = tagfile + ".out";
         StringBuilder sr = new StringBuilder();
         try {
@@ -301,6 +298,7 @@ public class virtualpcr {
             s2.SetShowPrimerAlignmentPCRproduct(PCRmatch_alignment);
             s2.SetProductMaxLength(maxlen);
             s2.SetProductMinLength(minlen);
+            s2.SetCTbisulfate(CTconversion);
             s2.SetPrimers(PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end);
             long startTime = System.nanoTime();
             s2.Run();
