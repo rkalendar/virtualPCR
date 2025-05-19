@@ -13,7 +13,7 @@ https://www.frontiersin.org/journals/bioinformatics/articles/10.3389/fbinf.2024.
 https://primerdigital.com/tools/epcr.html
 
 ## Availability and requirements:
-Programming language: Java 23 or higher
+Programming language: Java 24 or higher
 Java Downloads: 
 https://www.oracle.com/java/technologies/downloads/
 
