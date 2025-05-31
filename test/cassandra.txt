@@ -1,7 +1,2 @@
->1 
-RGTTAAGYRHGY[30]RRRATRGGTRACY[300]tggtatcagagc
-
- 
-
-
- 
+>linkedsearch:Cassandra_LTR-retrotransposon:
+RGTTAAGYRHGY[30]RRRATRGGTRACY[300]tggtatcagagc 
