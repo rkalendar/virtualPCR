@@ -1,6 +1,6 @@
 example for linked search:
 
-targets_path=E:\Genomes\Hordeum_vulgare\
+targets_path=E:\Genomes\Rhododendron_bailiense\
 primers_path=C:\virtualPCR\test\cassandra.txt
 type=primer
 linkedsearch=true
