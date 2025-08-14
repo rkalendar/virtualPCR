@@ -1,4 +1,5 @@
 targets_path=C:\virtualPCR\test\ch02.fasta
+output_path=
 primers_path=C:\virtualPCR\test\rt.txt
 type=primer
 linkedsearch=false/true
