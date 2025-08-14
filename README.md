@@ -43,6 +43,7 @@ To enter parameters and specify the location of the target files and primer's fi
 > **config.file**
 ```
 targets_path=C:\virtualPCR\test\ch02.fasta
+output_path=
 primers_path=C:\virtualPCR\test\rt.txt
 type=primer/probe
 linkedsearch=false/true
