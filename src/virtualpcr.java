@@ -1,19 +1,25 @@
-
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 public class virtualpcr {
 
     public static void main(String[] args) {
         if (args.length > 0) {
             String tagfile = "";
+            String outfile = "";
             String primersfile = "";
             String infile = args[0];
             for (String arg : args) {
@@ -47,6 +53,13 @@ public class virtualpcr {
                 while ((line = br.readLine()) != null) {
                     String cline = line;
                     line = line.toLowerCase();
+
+                    if (line.contains("output_path=")) {
+                        String value = line.substring(line.indexOf('=') + 1).trim(); // safer than hardcoded 13
+                        if (value.length() > 1) {
+                            outfile = value;
+                        }
+                    }
 
                     if (line.contains("targets_path=")) {
                         tagfile = cline.substring(13).trim();
@@ -137,6 +150,7 @@ public class virtualpcr {
                 }
             } catch (IOException e) {
             }
+            System.out.println("\n");
 
             String[] PrimersList = new String[1];
             String[] PrimersName = new String[1];
@@ -229,9 +243,27 @@ public class virtualpcr {
             if (n > 1) {
                 File folder = new File(tagfile);
                 if (folder.exists() && (folder.isDirectory() || folder.isFile())) {
-                    if (folder.isDirectory()) {
-                        String globalfile = folder.getPath().trim() + File.separator + "report.out";
 
+                    if (outfile.isBlank()) {
+                        Path p = folder.toPath().toAbsolutePath().normalize();
+                        Path outDir = Files.isDirectory(p) ? p : (p.getParent() != null ? p.getParent() : p);
+                        outfile = outDir.toString() + File.separator + "report.out";
+                    } else {
+                        Path outPath;
+                        try {
+                            OutputPath.Target tgt = OutputPath.parse(outfile);
+                            OutputPath.ensureParentExists(tgt);
+                            outPath = (tgt.type() == OutputPath.Type.DIRECTORY)
+                                    ? tgt.path().resolve("report.out")
+                                    : tgt.path();
+                        } catch (InvalidPathException | IOException e) {
+                            outPath = folder.toPath().resolve("report.out");
+                        }
+                        outfile = outPath.toAbsolutePath().toString();
+                    }
+                    System.out.println("\noutput_path=" + outfile + "\n");
+
+                    if (folder.isDirectory()) {
                         File[] files = folder.listFiles();
                         int k = -1;
                         String[] filelist = new String[files.length];
@@ -241,10 +273,10 @@ public class virtualpcr {
                             }
                         }
 
-                        try (FileWriter fileWriter1 = new FileWriter(globalfile)) {
+                        try (FileWriter fileWriter1 = new FileWriter(outfile)) {
                             for (String nfile : filelist) {
                                 try {
-                                    StringBuilder sr = Run(nfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion, PrimerStatistic);
+                                    StringBuilder sr = Run(nfile, outfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion, PrimerStatistic);
                                     fileWriter1.write(sr.toString());
                                     fileWriter1.write("\n\n");
                                 } catch (IOException e) {
@@ -256,7 +288,7 @@ public class virtualpcr {
                         }
 
                     } else {
-                        StringBuilder sr = Run(tagfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion, PrimerStatistic);
+                        StringBuilder sr = Run(tagfile, outfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end, minlen, maxlen, FRpairs, pcr_predict, alignment, ShowOnlyAmplicons, PCRmatch_alignment, CTconversion, PrimerStatistic);
                     }
                 } else {
                     System.out.println("\nFailed to open file: " + folder);
@@ -271,16 +303,14 @@ public class virtualpcr {
         }
     }
 
-    private static StringBuilder Run(String tagfile, String[] PrimersList, String[] PrimersName, String[] PrimersOri, boolean isprobe, boolean ispattern, boolean iscircle, boolean seqextract, int Err3end, int minlen, int maxlen, boolean FRpairs, boolean pcr_predict, boolean alignment, boolean ShowOnlyAmplicons, boolean PCRmatch_alignment, boolean CTconversion, boolean PrimerStatistic) {
-        String outfile = tagfile + ".out";
-        StringBuilder sr = new StringBuilder();
+    private static StringBuilder Run(String tagfile, String outfile, String[] PrimersList, String[] PrimersName, String[] PrimersOri, boolean isprobe, boolean ispattern, boolean iscircle, boolean seqextract, int Err3end, int minlen, int maxlen, boolean FRpairs, boolean pcr_predict, boolean alignment, boolean ShowOnlyAmplicons, boolean PCRmatch_alignment, boolean CTconversion, boolean PrimerStatistic) {
+        StringBuilder sr = new StringBuilder(1000);
         try {
             System.out.println("Running...");
             System.out.println("\nTarget file name: " + tagfile);
 
-            InSilicoPCR2 s2 = new InSilicoPCR2();
-            byte[] binaryArray = Files.readAllBytes(Paths.get(tagfile));
-            ReadingSequencesFiles rf = new ReadingSequencesFiles(binaryArray);
+            InSilicoPCR s2 = new InSilicoPCR();
+            ReadingSequencesFiles rf = new ReadingSequencesFiles(Paths.get(tagfile));
             if (rf.getNseq() == 0) {
                 System.out.println("There is no sequence(s).");
                 System.out.println("File format in Fasta:\n>header\nsequence here\n\nIn FASTA format the line before the nucleotide sequence, called the FASTA definition line, must begin with a carat (\">\"), followed by a unique SeqID (sequence identifier).\nThe line after the FASTA definition line begins the nucleotide sequence.\n");
@@ -302,20 +332,37 @@ public class virtualpcr {
             s2.SetPrimers(PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, Err3end);
             long startTime = System.nanoTime();
             s2.Run();
-            long duration = (System.nanoTime() - startTime) / 1000000000;
-            sr.append(s2.getResult());
-            System.out.println(sr);
-            System.out.println("Time taken: " + duration + " seconds\n\n");
-            try (FileWriter fileWriter = new FileWriter(outfile)) {
-                System.out.println("Saving report file: " + outfile);
-                fileWriter.write(sr.toString());
-                fileWriter.write("Time taken: " + duration + " seconds\n\n");
+
+            long duration = (System.nanoTime() - startTime) / 1000000;
+            StringBuilder st = new StringBuilder();
+            if (duration > 999) {
+                duration = duration / 1000;
+                st.append("Time taken: ").append(duration).append(" seconds\n\n");
+            } else {
+                st.append("Time taken: ").append(duration).append(" milliseconds\n\n");
             }
+
+            sr.append(s2.getResult()).append(st);
+            appendLine(outfile, sr.toString());
+            System.out.println(sr);
+            System.out.println("Saved report: " + outfile);
 
         } catch (IOException e) {
             System.out.println("Incorrect file name.\n");
         }
         return sr;
+    }
+
+    public static void appendLine(String outfile, CharSequence text) throws IOException {
+        Path path = Paths.get(outfile);
+        Path parent = path.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+        try (BufferedWriter w = Files.newBufferedWriter(path, StandardCharsets.UTF_8, CREATE, APPEND)) {
+            w.append(text);
+            w.append(System.lineSeparator());
+        }
     }
 
     public static int StrToInt(String str) {
