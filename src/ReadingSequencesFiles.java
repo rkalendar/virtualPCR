@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -15,19 +16,13 @@ public final class ReadingSequencesFiles {
 
     public ReadingSequencesFiles(Path fastaPath) throws IOException {
         LoadTable();
-        readFastaStream(Files.newBufferedReader(fastaPath, StandardCharsets.US_ASCII), /*normalize*/ true);
-    }
-
-    public static ReadingSequencesFiles readMasking(Path fastaPath) throws IOException {
-        ReadingSequencesFiles r = new ReadingSequencesFiles();
-        r.readFastaStream(Files.newBufferedReader(fastaPath, StandardCharsets.US_ASCII), /*normalize*/ false);
-        return r;
+        readFastaStream(Files.newBufferedReader(fastaPath, StandardCharsets.US_ASCII));
     }
 
     public ReadingSequencesFiles(byte[] s) {
         LoadTable();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(s), StandardCharsets.US_ASCII))) { //
-            readFastaStream(br, true);
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(s), StandardCharsets.US_ASCII))) {  
+            readFastaStream(br);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -36,7 +31,7 @@ public final class ReadingSequencesFiles {
     public ReadingSequencesFiles(String s) {
         LoadTable();
         try (BufferedReader br = new BufferedReader(new StringReader(s))) {
-            readFastaStream(br, true);
+            readFastaStream(br);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -101,13 +96,13 @@ public final class ReadingSequencesFiles {
         dnl[121] = 121;  // y
     }
 
-    private void readFastaStream(BufferedReader br, boolean normalize) throws IOException {
+    private void readFastaStream(BufferedReader br) throws IOException {
         List<String> names = new ArrayList<>();
         List<String> seqs = new ArrayList<>();
 
         String line;
         String currentName = null;
-        StringBuilder currentSeq = new StringBuilder(1 << 20); 
+        StringBuilder currentSeq = new StringBuilder(1 << 20);
 
         while ((line = br.readLine()) != null) {
             if (line.isEmpty()) {
@@ -128,11 +123,7 @@ public final class ReadingSequencesFiles {
             for (int i = 0; i < len; i++) {
                 char ch = line.charAt(i);
                 if (ch < 128 && dnl[ch] > 0) {
-                    if (normalize) {
-                        currentSeq.append((char) dnl[ch]);
-                    } else {
-                        currentSeq.append(ch);
-                    }
+                    currentSeq.append(ch);
                     lSeqs++;
                 }
 
@@ -153,18 +144,6 @@ public final class ReadingSequencesFiles {
 
         name_seq = names.toArray(String[]::new);
         sequence = seqs.toArray(String[]::new);
-    }
-
-    public void ReadingMaskSequencesFiles(byte[] source) {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(source), StandardCharsets.US_ASCII))) {
-            this.name_seq = null;
-            this.sequence = null;
-            this.ns = 0;
-            this.lSeqs = 0;
-            readFastaStream(br, false);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
     }
 
 }
