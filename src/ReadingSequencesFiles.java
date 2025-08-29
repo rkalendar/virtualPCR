@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -123,8 +122,8 @@ public final class ReadingSequencesFiles {
             for (int i = 0; i < len; i++) {
                 char ch = line.charAt(i);
                 if (ch < 128 && dnl[ch] > 0) {
-                    currentSeq.append(ch);
-                    lSeqs++;
+                     currentSeq.append((char) dnl[ch]);
+                     lSeqs++;
                 }
 
             }
