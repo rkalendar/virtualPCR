@@ -1,79 +1,130 @@
 # virtualPCR
 
-## In silico PCR for simple and complex tasks
-**Author:** Ruslan Kalendar  
-**Email:** ruslan.kalendar@helsinki.fi
+**In silico PCR for simple and complex tasks**
 
-virtualPCR is a versatile software tool for conducting **in silico PCR analysis**, designed to ensure primer/probe specificity across a wide range of applications. It enables researchers to predict primer/probe binding sites, assess mismatch tolerance, evaluate DNA duplex stability, and perform genome-wide searches. This makes it valuable for:
+[![Java](https://img.shields.io/badge/Java-24+-orange.svg)](https://www.oracle.com/java/technologies/downloads/)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blue.svg)]()
+[![Online Tool](https://img.shields.io/badge/Try%20Online-virtualPCR-green.svg)](https://primerdigital.com/tools/epcr.html)
+[![DOI](https://img.shields.io/badge/DOI-10.3389%2Ffbinf.2024.1464197-blue.svg)](https://www.frontiersin.org/journals/bioinformatics/articles/10.3389/fbinf.2024.1464197/full)
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Citation](#citation)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration File](#configuration-file)
+- [Option Reference](#option-reference)
+- [Input Formats](#input-formats)
+- [Output](#output)
+- [Author & Contact](#author--contact)
+
+---
+
+## Overview
+
+virtualPCR is a versatile tool for conducting **in silico PCR analysis**, designed to ensure primer/probe specificity across a wide range of applications. It enables researchers to predict primer/probe binding sites, assess mismatch tolerance, evaluate DNA duplex stability, and perform genome-wide searches.
+
+### Applications
 
 - Gene discovery via homology analysis
-- Molecular diagnostics
-- Genome profiling
-- Repeat sequence identification
+- Molecular diagnostics and primer validation
+- Genome profiling and repeat sequence identification
 - CRISPR-Cas gRNA target evaluation
 - miRNA and probe specificity testing
 
-The tool supports **linear and circular DNA templates**, including **bisulfite-treated DNA**, and allows batch file processing for large datasets.
+### Key Capabilities
+
+- Genome-wide primer/probe specificity analysis
+- Linear and circular DNA support (plasmids, mitochondria, plastids)
+- Bisulfite-treated DNA simulation (C→T conversion for methylation studies)
+- Linked search mode for complex primer arrangements
+- Degenerate nucleotides (IUPAC), LNA, and inosine support
+- Batch file processing and automation
 
 ---
 
 ## Citation
-Kalendar R, Shevtsov A, Otarbay Z, Ismailova A. (2024). *In silico PCR analysis: a comprehensive bioinformatics tool for enhancing nucleic acid amplification assays*. **Frontiers in Bioinformatics**, 4:1464197. [DOI:10.3389/fbinf.2024.1464197](https://www.frontiersin.org/journals/bioinformatics/articles/10.3389/fbinf.2024.1464197/full)
+
+Kalendar R, Shevtsov A, Otarbay Z, Ismailova A. (2024). *In silico PCR analysis: a comprehensive bioinformatics tool for enhancing nucleic acid amplification assays*. **Frontiers in Bioinformatics**, 4:1464197.
+[DOI:10.3389/fbinf.2024.1464197](https://www.frontiersin.org/journals/bioinformatics/articles/10.3389/fbinf.2024.1464197/full)
 
 ---
 
-## Online Access
-Use virtualPCR online at: [https://primerdigital.com/tools/epcr.html](https://primerdigital.com/tools/epcr.html)
+## Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| **Java** | Version 24 or higher |
+| **OS** | Windows, Linux, or macOS |
+| **RAM** | Default is sufficient; increase for large genomes (see [Memory](#large-genomes)) |
+
+**Download Java:** https://www.oracle.com/java/technologies/downloads/
+**Set Java Path:** https://www.java.com/en/download/help/path.html
 
 ---
 
-## Installation & Requirements
-- **Programming Language:** Java 24+
-- **Java Downloads:** [Oracle Java](https://www.oracle.com/java/technologies/downloads/)
-- **Set Java Path:** [Instructions](https://www.java.com/en/download/help/path.html)
+## Installation
 
-## Installing Java using Conda
-To install a specific version of OpenJDK using Conda, you need to specify the version number in your installation command and use the conda-forge channel. The latest version is available on the conda-forge channel.
-1. Add the conda-forge channel (if not already added). It is recommended to add the conda-forge channel to your configuration and set its priority to strict to ensure packages are preferentially installed from this channel:
-   
-```conda config --add channels conda-forge```
+### Option 1: Direct Download
 
-```conda config --set channel_priority strict```
+1. Download `virtualPCR.jar` from the `dist` directory
+2. Place it in your preferred location
+3. Ensure Java 24+ is installed and available in your PATH
 
-2. Create a new Conda environment and install the desired OpenJDK version. Creating a dedicated environment helps manage dependencies and avoid conflicts with other projects:
+### Option 2: Install Java via Conda
 
-```conda create -n java25 openjdk=25```
-
-3. Activate the new environment:
-
-```conda activate java25```
-
-4. Check if you have Java installed. The output should display information for the installed Java version:
-
-```java -version```
-
-### Genome Downloads
-If analyzing a specific genome, download individual chromosome FASTA files from [NCBI Datasets](https://www.ncbi.nlm.nih.gov/datasets/genome/). For example, the **human genome (T2T-CHM13v2.0)** is available at: [NCBI FTP](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_009914755.1/).
-
----
-
-## Running virtualPCR
-The main executable is `virtualPCR.jar`, located in the `dist` directory. Copy it to any location for use.
-
-### Example Command
 ```bash
-java -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\test\config.file
+# Add conda-forge channel and set priority
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+
+# Create environment with OpenJDK 25
+conda create -n java25 openjdk=25
+
+# Activate environment
+conda activate java25
+
+# Verify installation
+java -version
 ```
 
-### Large Genomes (Increase Memory)
+### Genome Downloads
+
+Download individual chromosome FASTA files from [NCBI Datasets](https://www.ncbi.nlm.nih.gov/datasets/genome/). For example, the human genome (T2T-CHM13v2.0) is available at [NCBI FTP](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_009914755.1/).
+
+---
+
+## Quick Start
+
+```bash
+# Basic usage
+java -jar virtualPCR.jar config.file
+
+# With increased memory for large genomes
+java -Xms4g -Xmx16g -jar virtualPCR.jar config.file
+```
+
+### Large Genomes
+
+For genome-wide analyses, allocate additional memory using JVM flags:
+
 ```bash
 java -Xms4g -Xmx16g -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\test\config.file
 ```
 
+- **`-Xms`** — initial heap size (memory allocated at startup)
+- **`-Xmx`** — maximum heap size (upper memory limit)
+
 ---
 
 ## Configuration File
-Parameters are specified in a plain text file (e.g., `config.file`):
+
+All parameters are specified in a plain text file (e.g., `config.file`):
+
 ```ini
 targets_path=C:\virtualPCR\test\ch02.fasta
 output_path=
@@ -94,32 +145,132 @@ ShowPCRProducts=true/false
 ShowPrimerAlignmentPCRproduct=true/false
 ```
 
-### Key Options
-- **type=probe** → search for primers and probes (TaqMan, Molecular Beacon, miRNA, CRISPR, microarrays)
-- **minlen / maxlen** → define expected PCR product size (default: 5000 bp)
-- **ShowPCRProducts** → enable/disable predicted PCR product output
-- **molecular** → analyze linear or circular DNA (plasmids, mitochondria, plastids)
-- **CTconversion** → simulate bisulfite conversion for methylation studies
-- **FRpairs** → restrict search to defined forward/reverse primer pairs
-- **ShowPrimerAlignment** → show all stable primer-target alignments
-- **ShowOnlyAmplicons** → output only amplicon sizes (recommended for genome-wide repeat-based PCR)
-- **LinkedSearch** → search linked primer sites with defined distance ranges
+### Paths
+
+| Parameter | Description |
+|-----------|-------------|
+| `targets_path` | Path to the target sequence file (FASTA or plain text) |
+| `primers_path` | Path to the primer/probe file (FASTA or tab-delimited) |
+| `output_path` | Output directory (leave empty for same directory as input) |
 
 ---
 
-## Input & Output
-- **Input:** Sequences in plain text, FASTA, or tab-delimited format. Supports degenerate nucleotides (IUPAC codes) and special cases (LNA, inosine).
-- **Output:** Results saved as tab-delimited plain text files.
+## Option Reference
 
-### Example Primer File (Tabular)
-```tsv
-ITS1    TCCGTAGGTGAACCTGCGG
-ITS2    GCTGCGTTCTTCATCGATGC
-ITS3    GCATCGATGAAGAACGCAGC
-ITS4    TCCTCCGCTTATTGATATGC
+### `type` — Search Mode
+
+| Value | Description |
+|-------|-------------|
+| `primer` | Standard PCR primer search **(default)** |
+| `probe` | Search for binding sites of primers, probes, and short sequences — TaqMan, Molecular Beacons, miRNA, CRISPR-Cas gRNA, microarray oligos, etc. Recommended when primer binding sites are not found, or when complementarity is expected for only part of the sequence (e.g., Molecular Beacon stems) |
+
+### `molecular` — Template Topology
+
+| Value | Description |
+|-------|-------------|
+| `linear` | Linear DNA **(default)** |
+| `circle` | Circular DNA (plasmids, mitochondrial/plastid genomes). Primers may produce one or two amplicons spanning the origin |
+
+### `minlen` / `maxlen` — Amplicon Size Filter
+
+Defines the expected PCR product size range (in bp). Amplicons outside this range are filtered out.
+
+- **Default:** 5000 bp maximum
+- **Example:** `minlen=200` and `maxlen=500` restricts output to 200–500 bp products
+
+### `CTconversion` — Bisulfite Conversion Simulation
+
+Simulates bisulfite conversion for methylation studies. Only cytosines **not** followed by guanine (non-CpG) are converted to thymine on both strands:
+
+```
+5'-aaCGaagtCCCCa-3'        5'-aaCGaagtTTTTa-3'
+   |||||||||||||     →         ||||||:|::::|
+3'-ttGCttCaggggt-5'        3'-ttGCttTaggggt-5'
 ```
 
-### Example Primer File (FASTA)
+### `FRpairs` — Restrict to Defined Primer Pairs
+
+When enabled, only defined forward/reverse primer pairs are analyzed. Each line in the primer file defines one pair (tab-separated):
+
+```
+1020	aggcctgtgatgctgatgat	cccaacaccaaagaggaaag
+1021	gctctgacctattgtctgtctgtct	cagtctccacagcagcagag
+1022	gtcctgctgacacacaccact	cgcaggagtagaagaaaga
+```
+
+A single forward primer can be paired with multiple reverse primers (and vice versa).
+
+### `ShowPrimerAlignment` — Display All Binding Sites
+
+When `true` (default), displays all stable primer-to-target alignments, including sites that may not produce PCR products under current conditions. Useful for examining binding site stability, orientation, and coordinates.
+
+### `ShowPrimerAlignmentPCRproduct` — Alignments for PCR Products Only
+
+When `true`, restricts alignment output to only those primer binding sites that contribute to predicted PCR products.
+
+### `ShowPCRProducts` — PCR Product Prediction
+
+When `true` (default), outputs predicted PCR products. Set to `false` to search for primer binding sites only, without amplicon prediction.
+
+### `ShowOnlyAmplicons` — Amplicon Lengths Only
+
+When `true`, outputs only amplicon lengths without detailed alignment analysis. Recommended for genome-wide in silico PCR with highly abundant repeat-based markers (iPBS, IRAP, ISSR, RAPD).
+
+### `LinkedSearch` — Linked/Associated Search
+
+A programmable search mode where binding sites are found for linked sequences within a specified distance. Linked searching supports tasks ranging from conventional sequence matching to in silico PCR with approximate matching.
+
+**Syntax:** The forward primer sequence is followed by the expected distance `[min-max]` and the second sequence:
+
+```
+>RT+(QMDVK)_RT-(YVDDML)
+CARATGGAYGTNAARAC[200-300]TAYGTNGAYGAYATG
+```
+
+**Variants:**
+
+```
+# Fixed distance (no range)
+CARATGGAYGTNAARAC[300]TAYGTNGAYGAYATG
+
+# Force second sequence to be reverse-complemented (@ prefix)
+CARATGGAYGTNAARAC[300]@CATRTCRTCNACRTA
+```
+
+### `number3errors` — 3' Mismatch Tolerance
+
+Number of allowed mismatches at the 3' end of the primer.
+
+---
+
+## Input Formats
+
+### Target Sequences
+
+Sequence files can be plain text, FASTA, or multi-entry FASTA. No file extension is required. Template length is not limited.
+
+**FASTA format** consists of a header line starting with `>` followed by one or more lines of sequence:
+
+```fasta
+>sequence_id Optional description
+ATCGATCGATCGATCGATCG...
+```
+
+### Primer/Probe Files
+
+Primers can be provided in **tab-delimited** or **FASTA** format. The software reads the first two columns (name and sequence) or three/four columns for primer-probe sets.
+
+**Tab-delimited format:**
+
+```
+ITS1	TCCGTAGGTGAACCTGCGG
+ITS2	GCTGCGTTCTTCATCGATGC
+ITS3	GCATCGATGAAGAACGCAGC
+ITS4	TCCTCCGCTTATTGATATGC
+```
+
+**FASTA format:**
+
 ```fasta
 >ITS1
 TCCGTAGGTGAACCTGCGG
@@ -131,124 +282,41 @@ GCATCGATGAAGAACGCAGC
 TCCTCCGCTTATTGATATGC
 ```
 
+Primer names can contain any characters (including spaces). Names may be identical across entries. Sequences must not contain spaces or non-nucleotide characters.
+
+### Supported Nucleotide Codes
+
+| Code | Bases | Code | Bases |
+|------|-------|------|-------|
+| A | Adenine | M | A/C |
+| T | Thymine | R | A/G |
+| G | Guanine | W | A/T |
+| C | Cytosine | S | G/C |
+| U | Uracil | Y | C/T |
+| I | Inosine | K | G/T |
+| N | A/G/C/T | V | A/G/C |
+| | | H | A/C/T |
+| | | D | A/G/T |
+| | | B | C/G/T |
+
+**LNA (Locked Nucleic Acid) codes:** dA=E, dC=F, dG=J, dT=L
+
 ---
 
-## Features at a Glance
-- 🔹 Genome-wide primer/probe specificity analysis
-- 🔹 Linear & circular DNA support
-- 🔹 Bisulfite DNA simulation (C>T conversion)
-- 🔹 Linked search mode for complex primer arrangements
-- 🔹 Batch file processing & automation
-- 🔹 User-friendly configuration via text files
+## Output
+
+Results are saved as **tab-delimited plain text files**, containing (depending on options enabled):
+
+- Primer binding site coordinates and orientations
+- Primer-target alignment details and mismatch analysis
+- Predicted PCR product sizes
+- Extracted amplicon sequences
 
 ---
 
+## Author & Contact
 
-**type=probe**
-> “Probe search” – helps the user execute searching of binding sites not only for primers but also for probes (TaqMan, Molecular Beacon, microRNA (miRNA), CRISPR-Cas guide RNA target, microarrays, etc.). This option is recommended in the cases when primer binding sites were not found or for searching for binding sites of probes for which the complementarity is expected only for part of the sequence, for example, in “Molecular Beacon” (both termini have not complementary regions to the target).
- 
-**minlen=/maxlen=**
-> The box of “Minimal and Maximal PCR Product length (bp)” – has the default value of 5000 bp, allowing the user to define the maximal size of the expected PCR product. Any amplicons larger than a defined value will be filtered out. 
+**Ruslan Kalendar**
+📧 ruslan.kalendar@helsinki.fi
 
-**ShowPCRProducts=true/false**
-> “PCR product prediction” has the default value true; to search for primer binding sites without further analysis of potential PCR fragments, this option should be disabled.
-
-**molecular=linear/circle**
->“Circular sequence” – analysis of circular molecules (plasmid, mitochondria or plastids DNA, etc.); in this case, the primers can produce one or two amplicons.
-
-**CTconversion=false/true**
-> “C >> T bisulphite conversion” – bisulphite modified genome sequence, design of specific PCR primers for in silico bisulphite conversion for both strands - only cytosines not followed by guanidine (CpG methylation) will be replaced by thymines:
-```
-5’aaCGaagtCCCCa-3'        5’aaCGaagtTTTTa-3'
-  |||||||||||||     ->      ||||||:|::::| 
-3’ttGCttCaggggt-5'        3’ttGCttTaggggt
-```
-**FRpairs=false/true**
-> “Restrict analysis for F/R primer pairs” – this option is used to analyse the primers list, where the common name unites each primer pair. Moreover, the program is not limited to one unique pair per primer: for one "Forward" primer, there can be several "reverse" primers, the same as the “reverse” primer. The search for potential amplicons will be carried out only for these primer pairs, while other primers from the list will be ignored. It is possible to group pairs in the form of a table, with each line containing a separate pair:
-```
-1020	aggcctgtgatgctgatgat	cccaacaccaaagaggaaag
-1021	gctctgacctattgtctgtctgtct	cagtctccacagcagcagag
-1022	gtcctgctgacacacaccact	cgcaggagtagaagaaaga
-1023	gatagggaggtgggggtct	tgattggacaggcagcacag
-1024	catgtgagagggagggcta	gggactgcatgctggtg
-1025	cacaacgagagctggggaga	ggataattgctgcaagagagaaa
-1026	ccttggagggggatgtagag	tactacggccgcgagg
-1027	gaaggatctttacccctctctcc	tcccagggtgcggagg
-```
-
-**ShowPrimerAlignment=true/false**
-> “Show all matching for primers alignment” - true by default, the software shows the result, including all matching of stable binding primer to the target. Not in all cases combinations of primers can produce the PCR products in the current assay conditions. Still, the user can examine the stability of primer binding sites, orientation and coordinates in the target.
-
-**ShowPrimerAlignmentPCRproduct=true/false** 
-> “Show alignment only for matching primers for PCR product” - all primer binding sites were represented in the previous option. In this case, the primer and target alignment analysis will be shown only for matching primers.
-
-**ShowOnlyAmplicons=true/false**
-> “Show only amplicon lengths” – checking this option allows the user to collect only amplicon lengths without primer and target alignment analysis. This option is recommended for in silico PCR of the whole genome, including all chromosome analysis with highly abandoned repeated sequences (in silico PCR for techniques based on repeats: iPBS, IRAP, ISSR or RAPD).
-
-**LinkedSearch=true**
-> "Linked (Associated) Search" - programmable search where binding sites are searched for linked sequences within a specified distance. In linked searching, the search criteria are based only on the distance between forward sites. Linked searching can perform a wider variety of tasks, ranging from conventional sequence matching to in silico PCR and general DNA sequence analysis tasks involving approximate matching.
-> To better understand how Linked Search works in practice, we use the example of an in silico PCR with two degenerate Copia-type RT primers. The primer sequences were converted into a single line where the forward primer sequence (5′-CARATGGAYGTNAARAC) was followed by the expected distance between the primer binding sites (200-300 nt) and the complementary sequence (TAYGTNGAYGAYATG) of the reverse primer (5′-CATRTCRTCNACRTA):    
-```
->RT+(QMDVK)_RT-(YVDDML)
-CARATGGAYGTNAARAC[200-300]TAYGTNGAYGAYATG
-
-or without specifying the interval between sequences:
-
->RT+(QMDVK)_RT-(YVDDML)
-CARATGGAYGTNAARAC[300]TAYGTNGAYGAYATG
-
-or if it is specified that the second sequence should be made complementary:
-
->RT+(QMDVK)_RT-(YVDDML)
-CARATGGAYGTNAARAC[300]@CATRTCRTCNACRTA
-```
-
-## Sequence Entry:
-Sequence data files are prepared using a text editor and saved in ASCII as text/plain format (.txt) or in .fasta or without file extensions (a file extension is not obligatory). The program takes a single sequence or accepts multiple DNA/RNA sequences in FASTA format. The template length is not limited.
-
-## FASTA format description:
-A sequence in FASTA format consists of:
-One line starts with a ">" sign and a sequence identification code. A textual description of the sequence optionally follows it. Since it is not part of the official format description, the software can ignore it when it is present.
-One or more lines containing the sequence itself. A file in FASTA format may comprise more than one sequence.
-The input DNA/RNA sequence can contain the degenerate nucleotides accepted as IUPAC code, an extended vocabulary of 13 letters, which allows the description of ambiguous DNA code. Each letter represents a combination of one or several nucleotides: M (A/C), R (A/G), W (A/T), S (G/C), Y (C/T), K (G/T), V (A/G/C), H (A/C/T), D (A/G/T), B (C/G/T), N (A/G/C/T), U (Uracil), I (Inosine). LNA: dA=E, dC=F, dG=J, dT=L.
-
-## The output is saved in tab-delimited, plain text files. 
-
-## In silico PCR application, primers file examples:
-
-For the beginning, the list of query primer(s) should be prepared in the FASTA format or as a table (with TAB or whitespace separators) (table from Microsoft Office documents or Excel worksheet) or only bare sequence without space between letters. The software reads only the first two columns with names and sequences or the first three/four columns for primers and probes:
-
-```
-ITS1	TCCGTAGGTGAACCTGCGG
-ITS2	GCTGCGTTCTTCATCGATGC
-ITS3	GCATCGATGAAGAACGCAGC
-ITS4	TCCTCCGCTTATTGATATGC
-ITS5	GGAAGTAAAAGTCGTAACAAGG
-KAN2-FP	ACCTACAACAAAGCTCTCATCAACC
-KAN2-RP	GCAATGTAACATCAGAGATTTTGAG
-L_SP6	TCAAGCTATGCATCCAACGCG
-L_T7	TAGGGCGAATTGGGCCCGACG
-```
-The first column indicates the primer's name, while the second column contains the primer sequence. This is the most convenient format for storing and using primers in such studies. Within primers, sequence the spaces and no DNA letters are allowed. Primer names can contain any characters, including only space. Furthermore, the names of primers can be identical.
-FASTA format has a description line starting with the “>” sign followed by a plain DNA sequence. This format is widespread for the storage and processing of DNA sequences:
-```
->ITS1 
-TCCGTAGGTGAACCTGCGG
->ITS2 
-GCTGCGTTCTTCATCGATGC
->ITS3 
-GCATCGATGAAGAACGCAGC
->ITS4 
-TCCTCCGCTTATTGATATGC
->ITS5 
-GGAAGTAAAAGTCGTAACAAGG
->KAN2-FP 
-ACCTACAACAAAGCTCTCATCAACC
->KAN2-RP 
-GCAATGTAACATCAGAGATTTTGAG
->L_SP6 
-TCAAGCTATGCATCCAACGCG
->L_T7 
-TAGGGCGAATTGGGCCCGACG
-```
-
+**Online Version:** https://primerdigital.com/tools/epcr.html
