@@ -4,6 +4,7 @@
 
 [![Java](https://img.shields.io/badge/Java-24+-orange.svg)](https://www.oracle.com/java/technologies/downloads/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blue.svg)]()
+[![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE.txt)
 [![Online Tool](https://img.shields.io/badge/Try%20Online-virtualPCR-green.svg)](https://primerdigital.com/tools/epcr.html)
 [![DOI](https://img.shields.io/badge/DOI-10.3389%2Ffbinf.2024.1464197-blue.svg)](https://www.frontiersin.org/journals/bioinformatics/articles/10.3389/fbinf.2024.1464197/full)
 
