@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -180,16 +181,29 @@ public class virtualpcr {
                 List<String> lo = new ArrayList<>();
                 List<String> ls = new ArrayList<>();
                 List<String> lines = Files.readAllLines(Paths.get(primersfile));
+
+                // Variables for accumulating FASTA records (used only when t == 1)
+                String currentName = null;
+                StringBuilder currentSeq = new StringBuilder();
+
                 for (String line : lines) {
                     if (!line.isEmpty()) {
                         System.out.println(line.trim());
                         if (t == 1) {
-                            if (line.contains(">")) {
-                                n++;
-                                ln.add(line.substring(1).trim());
+                            String trimmed = line.trim();
+                            if (trimmed.startsWith(">")) {
+                                // Save the previous entry
+                                if (currentName != null && currentSeq.length() > 0) {
+                                    String orig = currentSeq.toString();
+                                    ln.add(currentName);
+                                    lo.add(orig);
+                                    ls.add(dna.DNA(orig.toLowerCase()));
+                                    n++;
+                                }
+                                currentName = trimmed.substring(1).trim();
+                                currentSeq = new StringBuilder();
                             } else {
-                                lo.add(line.trim());
-                                ls.add(dna.DNA(line.toLowerCase()));
+                                currentSeq.append(trimmed);
                             }
                         }
                         if (t == 2) {
@@ -221,6 +235,15 @@ public class virtualpcr {
                             }
                         }
                     }
+                }
+
+                // Save the last FASTA record after the cycle ends
+                if (t == 1 && currentName != null && currentSeq.length() > 0) {
+                    String orig = currentSeq.toString();
+                    ln.add(currentName);
+                    lo.add(orig);
+                    ls.add(dna.DNA(orig.toLowerCase()));
+                    n++;
                 }
 
                 if (n > 1) {
