@@ -2,7 +2,7 @@
 
 **In silico PCR for simple and complex tasks**
 
-[![Java](https://img.shields.io/badge/Java-24+-orange.svg)](https://www.oracle.com/java/technologies/downloads/)
+[![Java](https://img.shields.io/badge/Java-25+-orange.svg)](https://www.oracle.com/java/technologies/downloads/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blue.svg)]()
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE.txt)
 [![Online Tool](https://img.shields.io/badge/Try%20Online-virtualPCR-green.svg)](https://primerdigital.com/tools/epcr.html)
@@ -59,7 +59,7 @@ Kalendar R, Shevtsov A, Otarbay Z, Ismailova A. (2024). *In silico PCR analysis:
 
 | Requirement | Details |
 |-------------|---------|
-| **Java** | Version 24 or higher |
+| **Java** | Version 25 or higher |
 | **OS** | Windows, Linux, or macOS |
 | **RAM** | Default is sufficient; increase for large genomes (see [Memory](#large-genomes)) |
 
