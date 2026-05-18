@@ -74,7 +74,7 @@ Kalendar R, Shevtsov A, Otarbay Z, Ismailova A. (2024). *In silico PCR analysis:
 
 1. Download `virtualPCR.jar` from the `dist` directory
 2. Place it in your preferred location
-3. Ensure Java 24+ is installed and available in your PATH
+3. Ensure Java 25+ is installed and available in your PATH
 
 ### Option 2: Install Java via Conda
 
