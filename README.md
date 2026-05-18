@@ -270,6 +270,14 @@ ITS3	GCATCGATGAAGAACGCAGC
 ITS4	TCCTCCGCTTATTGATATGC
 ```
 
+**Multiple columns Tab-delimited format:**
+
+```
+1020	aggcctgtgatgctgatgat	cccaacaccaaagaggaaag
+1021	gctctgacctattgtctgtctgtct	cagtctccacagcagcagag
+1022	gtcctgctgacacacaccact	cgcaggagtagaagaaaga
+```
+
 **FASTA format:**
 
 ```fasta
