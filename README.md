@@ -116,6 +116,18 @@ Download individual chromosome FASTA files from [NCBI Datasets](https://www.ncbi
 java -jar virtualPCR.jar config.file
 ```
 
+### Getting Help
+
+Run with no arguments — or with a help flag — to print usage and the full list of configuration options:
+
+```bash
+# Show help (any of these are equivalent)
+java -jar virtualPCR.jar -help
+java -jar virtualPCR.jar /?
+```
+
+Recognized help flags (case-insensitive): `-help`, `--help`, `-h`, `/help`, `/h`, `/?`, `-?`, `?`. Running with no configuration file also prints this help.
+
 ### Large Genomes
 
 For genome-wide analyses, allocate additional memory using JVM flags:
@@ -438,6 +450,7 @@ maxlen=400
 | No products reported | Try `type=probe`, increase `number3errors`, or widen `minlen`/`maxlen`. |
 | Too many products on a genome | Tighten `number3errors`, narrow the amplicon size window, or switch to `ShowOnlyAmplicons=true` for compact output. |
 | Primer file appears empty | Ensure sequences are ≥ 12 nt; check that ID and sequence are separated by a tab or space. |
+| Not sure which options exist | Run `java -jar virtualPCR.jar -help` (or with no arguments) to print usage and all configuration options. |
 
 ---
 
