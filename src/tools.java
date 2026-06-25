@@ -55,7 +55,10 @@ public final class tools {
             }
             s = "0." + new String(value1);
         }
-        java.text.DecimalFormat f1 = new java.text.DecimalFormat(s);
+        // Force a fixed locale so the decimal separator is always '.', never ',' on
+        // comma-locale hosts (ru/kk/de/fr) — the report is tab-delimited and must parse downstream.
+        java.text.DecimalFormat f1 = new java.text.DecimalFormat(s,
+                new java.text.DecimalFormatSymbols(java.util.Locale.ROOT));
         return (f1.format(d));
     }
 
@@ -101,7 +104,8 @@ public final class tools {
                 break;
             }
         }
-        return (Integer.parseInt(r.toString()));
+        long v = Long.parseLong(r.toString()); // up to 11 digits fits in long; avoids int-overflow NumberFormatException
+        return (v > Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int) v;
     }
 
     public static String Strings(int n, char c) {

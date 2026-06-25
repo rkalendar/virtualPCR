@@ -1,4 +1,3 @@
-
 public final class dna {
 
     final public static int maxdna = 1025; // =2^12 or 4^6=4096 (+1); 3^12=531,441; 4^12=16,777,216
@@ -102,15 +101,18 @@ public final class dna {
         int l = source.length();
         int n = l / 2;
         for (int i = 0; i < n; i++) {
-            if (cdna[b[i]] > 0) {
-                byte t = cdna[b[l - i - 1]];
-                b[l - i - 1] = cdna[b[i]];
-                b[i] = t;
-            }
+            int li = b[i] & 0xFF;
+            int ri = b[l - i - 1] & 0xFF;
+            // Reverse-complement: complement each end independently (keep unmapped chars verbatim) and always swap.
+            byte lc = (li < 128 && cdna[li] > 0) ? cdna[li] : b[i];
+            byte rc = (ri < 128 && cdna[ri] > 0) ? cdna[ri] : b[l - i - 1];
+            b[i] = rc;
+            b[l - i - 1] = lc;
         }
         if ((l % 2) == 1) {
-            if (cdna[b[n]] > 0) {
-                b[n] = cdna[b[n]];
+            int ci = b[n] & 0xFF;
+            if (ci < 128 && cdna[ci] > 0) {
+                b[n] = cdna[ci];
             }
         }
         return new String(b);
@@ -218,6 +220,9 @@ DNA_bisulfite = Replace(seq, "11", "cg")
         if (source == null || source.isEmpty()) {
             return null;
         }
+        
+     //   source="aaaaaaaa";
+        
         int l = source.length();
         if (l < 1) {
             return null;
@@ -247,7 +252,8 @@ DNA_bisulfite = Replace(seq, "11", "cg")
         }
 
         r = new byte[n][];
-        r[0] = f.clone();
+       r[0] = f.clone();
+ //    r[0] = Arrays.copyOf(f, l);      
 
         int k = 1;
         for (i = 0; i < l; i++) {
