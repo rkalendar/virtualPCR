@@ -15,12 +15,15 @@ public final class ReadingSequencesFiles {
 
     public ReadingSequencesFiles(Path fastaPath) throws IOException {
         LoadTable();
-        readFastaStream(Files.newBufferedReader(fastaPath, StandardCharsets.US_ASCII));
+        // ISO-8859-1 (Latin-1) maps all 256 byte values, so it never throws on non-ASCII
+        // input (e.g. Cyrillic/UTF-8 headers); the ch < 128 filter in readFastaStream()
+        // still discards every high byte, so DNA parsing is unaffected.
+        readFastaStream(Files.newBufferedReader(fastaPath, StandardCharsets.ISO_8859_1));
     }
 
     public ReadingSequencesFiles(byte[] s) {
         LoadTable();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(s), StandardCharsets.US_ASCII))) {  
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(s), StandardCharsets.ISO_8859_1))) {
             readFastaStream(br);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -64,7 +67,7 @@ public final class ReadingSequencesFiles {
         dnl[68] = 100;  // D->d
         dnl[71] = 103;  // G->g
         dnl[72] = 104;  // H->h
-        dnl[73] = 99;   // I->c  
+        dnl[73] = 110;  // I->n  (inosine is a universal/wobble base, not cytosine)
         dnl[75] = 107;  // K->k
         dnl[77] = 109;  // M->m
         dnl[78] = 110;  // N->n
@@ -82,7 +85,7 @@ public final class ReadingSequencesFiles {
         dnl[100] = 100;  // d
         dnl[103] = 103;  // g
         dnl[104] = 104;  // h
-        dnl[105] = 99;   // i -> c
+        dnl[105] = 110;  // i -> n  (inosine is a universal/wobble base, not cytosine)
         dnl[107] = 107;  // k
         dnl[109] = 109;  // m
         dnl[110] = 110;  // n
@@ -123,7 +126,8 @@ public final class ReadingSequencesFiles {
                 char ch = line.charAt(i);
                 if (ch < 128 && dnl[ch] > 0) {
                      currentSeq.append((char) dnl[ch]);
-                     lSeqs++;
+ 
+                    lSeqs++;
                 }
 
             }
