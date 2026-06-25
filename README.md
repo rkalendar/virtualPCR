@@ -201,15 +201,15 @@ ShowPrimerAlignmentPCRproduct=false
 | `linkedsearch` | `true`, `false` | `false` | Enable linked/associated search |
 | `FRpairs` | `true`, `false` | `false` | Restrict analysis to defined F/R pairs |
 | `CTconversion` | `true`, `false` | `false` | Simulate bisulfite conversion |
-| `minlen` | integer (bp) | — | Minimum amplicon length |
-| `maxlen` | integer (bp) | `5000` | Maximum amplicon length |
+| `minlen` | integer (bp) | `30` | Minimum amplicon length (inclusive) |
+| `maxlen` | integer (bp) | `3000` | Maximum amplicon length (inclusive) |
 | `number3errors` | integer | `1` | Allowed mismatches near the 3′ end |
 | `primerstatistic` | `true`, `false` | `true` | Print per-primer summary statistics |
-| `SequenceExtract` | `true`, `false` | `true` | Extract amplicon sequences into output |
+| `SequenceExtract` | `true`, `false` | `false` | Extract amplicon sequences into output |
 | `ShowPrimerAlignment` | `true`, `false` | `true` | Show all primer-to-target alignments |
 | `ShowPCRProducts` | `true`, `false` | `true` | Report predicted PCR products |
 | `ShowOnlyAmplicons` | `true`, `false` | `false` | Report amplicon lengths only (no alignments) |
-| `ShowPrimerAlignmentPCRproduct` | `true`, `false` | `false` | Restrict alignments to those forming products |
+| `ShowPrimerAlignmentPCRproduct` | `true`, `false` | `true` | Restrict alignments to those forming products |
 
 ### `type` — Search Mode
 
@@ -229,7 +229,7 @@ ShowPrimerAlignmentPCRproduct=false
 
 Defines the expected PCR product size range (in bp). Amplicons outside this range are filtered out.
 
-- **Default:** `maxlen=5000`; `minlen` is unbounded if not set.
+- **Default:** `minlen=30`, `maxlen=3000`. Both bounds are **inclusive**; the valid range is 20–50000 bp.
 - **Example:** `minlen=200` and `maxlen=500` restricts output to 200–500 bp products.
 
 ### `number3errors` — 3′ Mismatch Tolerance
@@ -285,7 +285,7 @@ CARATGGAYGTNAARAC[300]@CATRTCRTCNACRTA
 
 | Option | Effect when `true` |
 |--------|--------------------|
-| `primerstatistic` | Prints a per-primer summary (binding-site counts, ΔG, Tm, mismatch distribution). |
+| `primerstatistic` | Prints a per-primer table (ID, sequence, binding-site hit count) sorted by frequency, plus a consolidated cross-file table and a companion `*.stats.tsv` file — see [Output](#output). |
 | `SequenceExtract` | Writes extracted amplicon sequences into the output file. |
 | `ShowPrimerAlignment` | Displays all stable primer-to-target alignments, including binding sites that may not produce PCR products. Useful for examining site stability, orientation, and coordinates. |
 | `ShowPCRProducts` | Outputs predicted PCR products. Set to `false` to report binding sites only, without amplicon prediction. |
@@ -376,13 +376,27 @@ TCCTCCGCTTATTGATATGC
 
 ## Output
 
-Results are saved as **tab-delimited plain-text files**, containing (depending on options enabled):
+Results are saved as **tab-delimited, UTF-8 plain-text files**, containing (depending on options enabled):
 
 - Primer binding-site coordinates and orientations
 - Primer-target alignment details and mismatch analysis
 - Predicted PCR product sizes
 - Extracted amplicon sequences
 - Per-primer summary statistics (when `primerstatistic=true`)
+
+When a directory of target files is processed, all per-file reports are written to a single combined output file, followed by the global statistics described below.
+
+### Per-primer statistics
+
+With `primerstatistic=true`, each report ends with a per-primer table sorted by hit count (`PrimerID`, `Sequence`, `Hits`), followed by a **consolidated global table** that sums each primer's occurrence across every analyzed sequence and file:
+
+| Column | Meaning |
+|--------|---------|
+| `Hits` | Total binding sites found |
+| `Sequences` | Number of sequences in which the primer occurs |
+| `Files` | Number of files in which the primer occurs |
+
+When a directory of targets is processed, this table aggregates the whole batch. It is written both at the end of the main report and to a separate companion **`<report>.stats.tsv`** file (tab-separated, UTF-8) for direct import into spreadsheets or R.
 
 ---
 
