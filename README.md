@@ -93,11 +93,11 @@ java -version
 conda config --add channels conda-forge
 conda config --set channel_priority strict
 
-# Create environment with OpenJDK 25
-conda create -n java25 openjdk=25
+# Create environment with OpenJDK 26
+conda create -n java26 openjdk=26
 
 # Activate environment
-conda activate java25
+conda activate java26
 
 # Verify installation
 java -version
