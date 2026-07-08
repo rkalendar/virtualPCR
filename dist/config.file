@@ -1,0 +1,20 @@
+targets_path=D:\Genomes\GRCh38.p14\
+primers_path=D:\virtualPCR\test\primers.txt
+output_path=D:\report\
+type=primer
+linkedsearch=false
+molecular=linear/circle
+number3errors=0
+minlen=150
+maxlen=300
+FRpairs=false
+CTconversion=false/true
+SequenceExtract=true
+ShowPrimerAlignment=false
+ShowOnlyAmplicons=true
+ShowPCRProducts=true
+ShowPrimerAlignmentPCRproduct=false
+ShowPCRproductCalculation=true/false
+
+
+java -jar -Xms4g -Xmx32g D:\virtualPCR\dist\virtualPCR.jar D:\virtualPCR\test\config.file 
