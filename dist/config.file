@@ -1,5 +1,5 @@
 targets_path=D:\Genomes\GRCh38.p14\
-primers_path=D:\virtualPCR\test\primers.txt
+primers_path=D:\test\primers.txt
 output_path=D:\report\
 type=primer
 linkedsearch=false
@@ -17,4 +17,4 @@ ShowPrimerAlignmentPCRproduct=false
 ShowPCRproductCalculation=true/false
 
 
-java -jar -Xms4g -Xmx32g D:\virtualPCR\dist\virtualPCR.jar D:\virtualPCR\test\config.file 
+java -jar -Xms4g -Xmx16g D:\virtualPCR\dist\virtualPCR.jar D:\test\config.file 
