@@ -78,8 +78,12 @@ public class virtualpcr {
                         ispattern = true;
                         System.out.println(line);
                     }
-                    if (line.contains("showprimeralignmentpcrproduct=true")) {
-                        PCRmatch_alignment = true;
+                    // Both values are read here. This option defaults to true, so
+                    // matching "=true" only — as the other flags do, whose single
+                    // recognised value is the opposite of their default — left it
+                    // permanently on and made "=false" a no-op.
+                    if (line.contains("showprimeralignmentpcrproduct=")) {
+                        PCRmatch_alignment = !line.contains("showprimeralignmentpcrproduct=false");
                         System.out.println(line);
                     }
                     if (line.contains("sequenceextract=true")) {

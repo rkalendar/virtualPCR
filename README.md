@@ -93,11 +93,11 @@ java -version
 conda config --add channels conda-forge
 conda config --set channel_priority strict
 
-# Create environment with OpenJDK 26
-conda create -n java26 openjdk=26
+# Create environment with OpenJDK 25
+conda create -n java25 openjdk=25
 
 # Activate environment
-conda activate java26
+conda activate java25
 
 # Verify installation
 java -version
@@ -126,7 +126,7 @@ java -jar virtualPCR.jar -help
 java -jar virtualPCR.jar /?
 ```
 
-Recognized help flags (case-insensitive): `-help`, `--help`, `-h`, `/help`, `/h`, `/?`, `-?`, `?`. Running with no configuration file also prints this help.
+Recognized help flags (case-insensitive): `-help`, `--help`, `-h`, `--h`, `/help`, `/h`, `/?`, `-?`, `?`, and the bare word `help`. A help flag is honoured wherever it appears in the command line, and running with no arguments prints the same screen.
 
 ### Large Genomes
 
@@ -179,6 +179,8 @@ ShowPrimerAlignmentPCRproduct=false
 ```
 
 > **Note:** Option keys are case-insensitive (`linkedsearch` and `LinkedSearch` are equivalent). For clarity, this README uses the casing shown in the configuration example above.
+
+> ⚠️ **A `#` does not disable a setting.** Each line is searched for the option names it may contain, wherever they appear, so `# minlen=200` is read exactly as `minlen=200` would be. Use `#` only for notes that contain no `key=value` text — as in the example above — and **delete** a setting you want to switch off rather than commenting it out. Every option a run recognised is echoed to the console, which is the quickest way to confirm what was applied.
 
 ### Paths
 
@@ -281,6 +283,12 @@ CARATGGAYGTNAARAC[300]TAYGTNGAYGAYATG
 CARATGGAYGTNAARAC[300]@CATRTCRTCNACRTA
 ```
 
+**Rules:**
+
+- Each element of the pattern must be at least 12 nt; shorter fragments are ignored.
+- `@` marks the element it belongs to for reverse-complementing. It is recognised anywhere inside that element, not only at the front, so keep it at the start to avoid surprises.
+- Any number of elements may be chained: `seq1[1-100]seq2[1-50]seq3`.
+
 ### Output-control Options
 
 | Option | Effect when `true` |
@@ -290,7 +298,7 @@ CARATGGAYGTNAARAC[300]@CATRTCRTCNACRTA
 | `ShowPrimerAlignment` | Displays all stable primer-to-target alignments, including binding sites that may not produce PCR products. Useful for examining site stability, orientation, and coordinates. |
 | `ShowPCRProducts` | Outputs predicted PCR products. Set to `false` to report binding sites only, without amplicon prediction. |
 | `ShowOnlyAmplicons` | Outputs only amplicon lengths without detailed alignment analysis. Recommended for genome-wide in silico PCR with highly abundant repeat-based markers (iPBS, IRAP, ISSR, RAPD). |
-| `ShowPrimerAlignmentPCRproduct` | Restricts alignment output to only those primer binding sites that contribute to predicted PCR products. |
+| `ShowPrimerAlignmentPCRproduct` | Restricts alignment output to only those primer binding sites that contribute to predicted PCR products. This is the default; set it to `false` to keep every stable alignment in the report, including sites that form no product. |
 
 ---
 
