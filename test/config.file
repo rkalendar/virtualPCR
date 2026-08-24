@@ -10,6 +10,7 @@ maxlen=500
 FRpairs=false/true
 CTconversion=false/true
 SequenceExtract=true
+flanks=100
 ShowPrimerAlignment=true
 ShowOnlyAmplicons=true/false
 ShowPCRProducts=true/false
