@@ -13,6 +13,7 @@
 ## Table of Contents
 
 - [Overview](#overview)
+- [What Changed](#what-changed)
 - [Citation](#citation)
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -44,10 +45,27 @@ virtualPCR is a versatile tool for **in silico PCR analysis**, designed to ensur
 
 - Genome-wide primer/probe specificity analysis
 - Linear and circular DNA support (plasmids, mitochondria, plastids)
-- Bisulfite-treated DNA simulation (C→T conversion for methylation studies)
 - Linked search mode for complex primer arrangements
 - Degenerate nucleotides (IUPAC), LNA, and inosine support
 - Batch file processing and automation
+
+---
+
+## What Changed
+
+Reports produced by this version are **not directly comparable** with those from earlier ones. The differences that matter scientifically:
+
+| Change | Effect on your results |
+|--------|------------------------|
+| Melting-temperature formula | A length-dependent divalent-cation term was computed in integer arithmetic and was therefore always zero. With it restored, **every reported Tm and Ta is about 1 °C lower** than before. Binding sites and products are unaffected. |
+| Sites at the start of a sequence | A binding site beginning at position 1 of a sequence was scored short and could be rejected. Such sites are now found — relevant mainly for multi-entry FASTA files. |
+| Overlapping repeats of one primer | When two sites of the same primer overlapped, the nearer one could suppress the other entirely, before any alignment. Both are now reported. |
+| Circular templates | Amplicons spanning the origin were reported one base short; their coordinates were clipped to the ends of the molecule instead of wrapping; and a primer pair that already had a valid product could also emit a spurious product running the whole way round. All three are corrected. |
+| Circular templates shorter than 23 nt | Previously aborted the run with an error. |
+| Order of blocks in the report | The internal sort key was not a total order. Fixing it changes the order in which sites and products appear. The set of results is unchanged. |
+| `CTconversion` removed | The option was documented and parsed but never implemented — no conversion was ever applied. It has been removed rather than left misleading; a configuration containing it now prints a warning. |
+
+Configuration files are read more strictly and more helpfully — see [Configuration File](#configuration-file). Large runs are also considerably faster and use less memory, but produce identical output.
 
 ---
 
@@ -162,7 +180,6 @@ type=primer
 molecular=linear
 linkedsearch=false
 FRpairs=false
-CTconversion=false
 
 # --- Filters ---
 minlen=200
@@ -179,15 +196,20 @@ ShowOnlyAmplicons=false
 ShowPrimerAlignmentPCRproduct=false
 ```
 
-> **Note:** Option keys are case-insensitive (`linkedsearch` and `LinkedSearch` are equivalent). For clarity, this README uses the casing shown in the configuration example above.
+**How lines are read.** Each line is split at its first `=`. The key is matched exactly (case-insensitive, so `linkedsearch` and `LinkedSearch` are equivalent), and surrounding spaces are ignored — `minlen = 200` works. Values keep their original case, which matters for paths.
 
-> ⚠️ **A `#` does not disable a setting.** Each line is searched for the option names it may contain, wherever they appear, so `# minlen=200` is read exactly as `minlen=200` would be. Use `#` only for notes that contain no `key=value` text — as in the example above — and **delete** a setting you want to switch off rather than commenting it out. Every option a run recognised is echoed to the console, which is the quickest way to confirm what was applied.
+- **`#` starts a comment** where it cannot be part of a value: before the `=`, or preceded by a space. So `# minlen=200` is ignored, and `minlen=200  # note` reads as `200`. A `#` inside a path is left alone.
+- **Unrecognised keys are reported**, not silently skipped: a typo such as `min_len=100` prints `Warning: unknown option ignored: min_len=100` and the run continues on defaults for that setting.
+- **Values that are not plain numbers are reported too.** `maxlen=2,000` prints a note showing it was read as `2`, rather than failing silently.
+- Every recognised option is echoed to the console, which remains the quickest way to confirm what was applied.
+
+> ⚠️ Earlier versions had none of this: `#` did not disable anything, spaces around `=` silently switched an option off, and misspelled keys were ignored without a word. If you are reusing an old configuration file, check the console echo once.
 
 ### Paths
 
 | Parameter | Description |
 |-----------|-------------|
-| `targets_path` | Path to the target sequence file (FASTA or plain text). |
+| `targets_path` | Path to the target FASTA file, or to a directory of FASTA files. |
 | `primers_path` | Path to the primer/probe file (FASTA or tab/space-delimited). |
 | `output_path` | Output directory. Leave empty to write results next to the input. |
 
@@ -203,12 +225,12 @@ ShowPrimerAlignmentPCRproduct=false
 | `molecular` | `linear`, `circle` | `linear` | Template topology |
 | `linkedsearch` | `true`, `false` | `false` | Enable linked/associated search |
 | `FRpairs` | `true`, `false` | `false` | Restrict analysis to defined F/R pairs |
-| `CTconversion` | `true`, `false` | `false` | Simulate bisulfite conversion |
 | `minlen` | integer (bp) | `30` | Minimum amplicon length (inclusive) |
 | `maxlen` | integer (bp) | `3000` | Maximum amplicon length (inclusive) |
 | `number3errors` | integer | `1` | Allowed mismatches near the 3′ end |
 | `primerstatistic` | `true`, `false` | `true` | Print per-primer summary statistics |
 | `SequenceExtract` | `true`, `false` | `false` | Extract amplicon sequences into output |
+| `flanks` | integer (bp) | `0` | Extra template bases kept on each side of every extracted amplicon; implies `SequenceExtract=true` |
 | `ShowPrimerAlignment` | `true`, `false` | `true` | Show all primer-to-target alignments |
 | `ShowPCRProducts` | `true`, `false` | `true` | Report predicted PCR products |
 | `ShowOnlyAmplicons` | `true`, `false` | `false` | Report amplicon lengths only (no alignments) |
@@ -226,7 +248,7 @@ ShowPrimerAlignmentPCRproduct=false
 | Value | Description |
 |-------|-------------|
 | `linear` | Linear DNA **(default)**. |
-| `circle` | Circular DNA (plasmids, mitochondrial/plastid genomes). Primers may produce one or two amplicons spanning the origin. |
+| `circle` | Circular DNA (plasmids, mitochondrial/plastid genomes). A primer pair yields one product, which may span the origin; such products are reported with wrapping coordinates (for example `2 951-120`). |
 
 ### `minlen` / `maxlen` — Amplicon Size Filter
 
@@ -234,20 +256,11 @@ Defines the expected PCR product size range (in bp). Amplicons outside this rang
 
 - **Default:** `minlen=30`, `maxlen=3000`. Both bounds are **inclusive**; the valid range is 20–50000 bp.
 - **Example:** `minlen=200` and `maxlen=500` restricts output to 200–500 bp products.
+- The two are reconciled after the whole file is read, so their order in the file does not matter. If `maxlen` ends up below `minlen`, it is raised to `minlen` and the adjustment is printed.
 
 ### `number3errors` — 3′ Mismatch Tolerance
 
 Maximum number of mismatches allowed within the 3′ region of each primer. Lower values give stricter (PCR-realistic) specificity; higher values broaden the search.
-
-### `CTconversion` — Bisulfite Conversion Simulation
-
-Simulates bisulfite conversion for methylation studies. Only cytosines **not** followed by guanine (non-CpG) are converted to thymine on both strands:
-
-```
-5'-aaCGaagtCCCCa-3'        5'-aaCGaagtTTTTa-3'
-   |||||||||||||     →         ||||||:|::::|
-3'-ttGCttCaggggt-5'        3'-ttGCttTaggggt-5'
-```
 
 ### `FRpairs` — Restrict to Defined Primer Pairs
 
@@ -296,6 +309,7 @@ CARATGGAYGTNAARAC[300]@CATRTCRTCNACRTA
 |--------|--------------------|
 | `primerstatistic` | Prints a per-primer table (ID, sequence, binding-site hit count) sorted by frequency, plus a consolidated cross-file table and a companion `*.stats.tsv` file — see [Output](#output). |
 | `SequenceExtract` | Writes extracted amplicon sequences into the output file. |
+| `flanks=N` | Keeps `N` additional template bases on each side of every extracted amplicon, in lower case, with the amplicon itself in upper case. Setting it turns `SequenceExtract` on automatically. On a circular template the flanks wrap around the origin and are trimmed so they cannot run into the amplicon from the other side. |
 | `ShowPrimerAlignment` | Displays all stable primer-to-target alignments, including binding sites that may not produce PCR products. Useful for examining site stability, orientation, and coordinates. |
 | `ShowPCRProducts` | Outputs predicted PCR products. Set to `false` to report binding sites only, without amplicon prediction. |
 | `ShowOnlyAmplicons` | Outputs only amplicon lengths without detailed alignment analysis. Recommended for genome-wide in silico PCR with highly abundant repeat-based markers (iPBS, IRAP, ISSR, RAPD). |
@@ -307,7 +321,7 @@ CARATGGAYGTNAARAC[300]@CATRTCRTCNACRTA
 
 ### Target Sequences
 
-Sequence files can be plain text, single-entry FASTA, or multi-entry FASTA. No specific file extension is required. Template length is not limited (other than by available memory).
+Targets must be in **FASTA** — single-entry or multi-entry. Every entry must begin with a `>` header line; a file containing bare sequence with no header is rejected with a message saying so. No specific file extension is required, and template length is not limited (other than by available memory).
 
 **FASTA format** consists of a header line starting with `>` followed by one or more lines of sequence:
 
@@ -356,6 +370,7 @@ TCCTCCGCTTATTGATATGC
 - Sequences must not contain spaces or non-nucleotide characters.
 - Sequences shorter than 12 nt are skipped.
 - File format (FASTA, tab, or space) is auto-detected.
+- The file is read as UTF-8, falling back to an 8-bit encoding (Windows-1251, Latin-1) if that fails, so a hand-edited list with non-ASCII identifiers still loads. Non-ASCII identifiers in an 8-bit file may appear garbled in the report; the sequences themselves are unaffected.
 
 ### Supported Nucleotide Codes
 
@@ -394,6 +409,8 @@ Results are saved as **tab-delimited, UTF-8 plain-text files**, containing (depe
 - Per-primer summary statistics (when `primerstatistic=true`)
 
 When a directory of target files is processed, all per-file reports are written to a single combined output file, followed by the global statistics described below.
+
+The console shows progress and, for a single target, the first 8 KB of the report; the full text always goes to the output file, whose path is printed when the run finishes.
 
 ### Per-primer statistics
 
@@ -451,16 +468,20 @@ ShowPCRProducts=false
 ShowPrimerAlignment=true
 ```
 
-### 4. Bisulfite-converted template
+### 4. Amplicons with flanking regions extracted
 
 ```ini
-targets_path=test/bs_region.fasta
-primers_path=test/bs_primers.txt
+targets_path=test/plasmid.fasta
+primers_path=test/pr.txt
 type=primer
-CTconversion=true
-minlen=80
-maxlen=400
+molecular=circle
+minlen=100
+maxlen=3000
+SequenceExtract=true
+flanks=100
 ```
+
+Each extracted record carries 100 template bases on either side of the amplicon, in lower case, with the amplicon in upper case.
 
 ---
 
@@ -472,7 +493,10 @@ maxlen=400
 | `OutOfMemoryError` | Increase JVM heap with `-Xmx`, e.g. `-Xmx16g`. |
 | No products reported | Try `type=probe`, increase `number3errors`, or widen `minlen`/`maxlen`. |
 | Too many products on a genome | Tighten `number3errors`, narrow the amplicon size window, or switch to `ShowOnlyAmplicons=true` for compact output. |
-| Primer file appears empty | Ensure sequences are ≥ 12 nt; check that ID and sequence are separated by a tab or space. |
+| `No usable primers in ...` | The file opened but nothing in it parsed as ID + sequence. Ensure sequences are ≥ 12 nt and that ID and sequence are separated by a tab or space. |
+| `No '>' header line found in ...` | The target is not FASTA. Add a `>` header line above the sequence. |
+| `Warning: unknown option ignored: ...` | The key is misspelled or no longer exists (for example `CTconversion`). Fix or delete the line — that setting is running on its default. |
+| An option in the file seems to have no effect | Check the console echo: every recognised option is printed back. If yours is missing, it was not recognised. |
 | Not sure which options exist | Run `java -jar virtualPCR.jar -help` (or with no arguments) to print usage and all configuration options. |
 
 ---
