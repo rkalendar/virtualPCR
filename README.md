@@ -172,6 +172,7 @@ number3errors=1
 # --- Output control ---
 primerstatistic=true
 SequenceExtract=true
+flanks=100
 ShowPrimerAlignment=true
 ShowPCRProducts=true
 ShowOnlyAmplicons=false
