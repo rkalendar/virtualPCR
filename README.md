@@ -228,6 +228,7 @@ ShowPrimerAlignmentPCRproduct=false
 | `minlen` | integer (bp) | `30` | Minimum amplicon length (inclusive) |
 | `maxlen` | integer (bp) | `3000` | Maximum amplicon length (inclusive) |
 | `number3errors` | integer | `1` | Allowed mismatches near the 3′ end |
+| `threads` | integer | `1` | Target files processed at once (directory mode only) |
 | `primerstatistic` | `true`, `false` | `true` | Print per-primer summary statistics |
 | `SequenceExtract` | `true`, `false` | `false` | Extract amplicon sequences into output |
 | `flanks` | integer (bp) | `0` | Extra template bases kept on each side of every extracted amplicon; implies `SequenceExtract=true` |
@@ -257,6 +258,24 @@ Defines the expected PCR product size range (in bp). Amplicons outside this rang
 - **Default:** `minlen=30`, `maxlen=3000`. Both bounds are **inclusive**; the valid range is 20–50000 bp.
 - **Example:** `minlen=200` and `maxlen=500` restricts output to 200–500 bp products.
 - The two are reconciled after the whole file is read, so their order in the file does not matter. If `maxlen` ends up below `minlen`, it is raised to `minlen` and the adjustment is printed.
+
+### `threads` — Parallel Batch Processing
+
+Only affects **directory mode**; a single target file is unaffected. With `threads=N` the tool works on `N` target files at a time, in batches, and writes the results in file order.
+
+- **Default `threads=1`** — the behaviour is exactly as before.
+- The value is clamped to the number of available processors.
+- **Output does not change.** The combined report, the per-primer statistics and the console log are identical whatever `threads` is set to — only the `Time taken:` line of each file differs, since it measures wall-clock time and files now share the CPU.
+- **Memory scales with it.** Every file being worked on holds its whole template and its whole report. In one measurement — four targets producing 57 MB reports each — `threads=1` completed in 200 MB of heap while `threads=4` needed 400 MB. Raise `-Xmx` along with `threads`, or lower `threads`.
+- Speed-up is bounded by disk and by the serial write: on eight large targets across four cores, wall time fell by roughly a quarter to a third.
+
+```ini
+targets_path=genomes/
+primers_path=primers/its.txt
+threads=4
+```
+
+> If a file runs out of memory the whole run stops with a non-zero exit code rather than skipping that file — a truncated report must not look like a successful one. Lower `threads` or raise `-Xmx` and re-run.
 
 ### `number3errors` — 3′ Mismatch Tolerance
 
@@ -490,7 +509,7 @@ Each extracted record carries 100 template bases on either side of the amplicon,
 | Symptom | Likely cause / fix |
 |---------|-------------------|
 | `UnsupportedClassVersionError` | Java version is older than 26 — the JAR is compiled for class-file version 70. Install Java 26+ and verify with `java -version`. |
-| `OutOfMemoryError` | Increase JVM heap with `-Xmx`, e.g. `-Xmx16g`. |
+| `OutOfMemoryError` | Increase JVM heap with `-Xmx`, e.g. `-Xmx16g`. If you set `threads` above 1, each file in flight needs its own memory — lower it or raise `-Xmx` in proportion. |
 | No products reported | Try `type=probe`, increase `number3errors`, or widen `minlen`/`maxlen`. |
 | Too many products on a genome | Tighten `number3errors`, narrow the amplicon size window, or switch to `ShowOnlyAmplicons=true` for compact output. |
 | `No usable primers in ...` | The file opened but nothing in it parsed as ID + sequence. Ensure sequences are ≥ 12 nt and that ID and sequence are separated by a tab or space. |
