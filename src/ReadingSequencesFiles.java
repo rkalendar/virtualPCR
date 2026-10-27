@@ -21,28 +21,6 @@ public final class ReadingSequencesFiles {
         readFastaStream(Files.newBufferedReader(fastaPath, StandardCharsets.ISO_8859_1));
     }
 
-    public ReadingSequencesFiles(byte[] s) {
-        LoadTable();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(s), StandardCharsets.ISO_8859_1))) {
-            readFastaStream(br);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    public ReadingSequencesFiles(String s) {
-        LoadTable();
-        try (BufferedReader br = new BufferedReader(new StringReader(s))) {
-            readFastaStream(br);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    public ReadingSequencesFiles() {
-        LoadTable();
-    }
-
     public String[] getSequences() {
         return ns == 0 ? null : sequence;
     }

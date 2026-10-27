@@ -34,10 +34,10 @@ public class PrimerLoader {
      * (contains a line with '>') - TAB: ID<TAB>seq1[<TAB>seq2 ...] - SPACE: ID seq1
      * [seq2 ...]
      *
-     * In columnar formats, the first column is the ID, and all others are the sequences. Sequences of length <= 11 after dna.DNA(...) are skipped. @param primersfile
+     * In columnar formats, the first column is the ID, and all others are the sequences. 
+     * Sequences of length <= 11 after dna.DNA(...) are skipped. @param primersfile
      */
-    // Reports nothing on failure: the caller knows whether the path was blank, the file missing,
-    // or the contents unusable, and prints one accurate message for the case that actually applies.
+    // Reports nothing on failure: the caller knows whether the path was blank, the file missing, or the contents unusable, and prints one accurate message for the case that actually applies.
     public static Primers loadPrimers(String primersfile) {
 
         // --- 1. Прочитать файл ---
@@ -103,7 +103,7 @@ public class PrimerLoader {
                 }
             }
         }
-        // последний FASTA-блок
+        // the last FASTA block
         if (format == 1) {
             flushFasta(currentName, currentSeq, names, originals, processed);
         }

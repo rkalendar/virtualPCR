@@ -1,47 +1,60 @@
 public final class tools { 
 
+    // "Is this a nucleotide character" lookup, previously rebuilt on every call - and rebuilt in
+    // full even though the method returns on the first valid character it meets. Read-only.
+    // Not tables.cdn: that one maps 'i', this one deliberately does not.
+    private static final byte[] ISDNA = new byte[128];
+
+    static {
+        ISDNA[65] = 1;   //A
+        ISDNA[66] = 1;   //B
+        ISDNA[67] = 1;   //C
+        ISDNA[68] = 1;   //D
+        ISDNA[71] = 1;   //G
+        ISDNA[72] = 1;   //H
+        ISDNA[75] = 1;   //K
+        ISDNA[77] = 1;   //M
+        ISDNA[78] = 1;   //N
+        ISDNA[82] = 1;   //R
+        ISDNA[83] = 1;   //S
+        ISDNA[84] = 1;   //T
+        ISDNA[85] = 1;   //U
+        ISDNA[86] = 1;   //V
+        ISDNA[87] = 1;   //W
+        ISDNA[89] = 1;   //Y
+        ISDNA[97] = 1;   //a
+        ISDNA[98] = 1;   //b
+        ISDNA[99] = 1;   //c
+        ISDNA[100] = 1;  //d
+        ISDNA[103] = 1;  //g
+        ISDNA[104] = 1;  //h
+        ISDNA[107] = 1;  //k
+        ISDNA[109] = 1;  //m
+        ISDNA[110] = 1;  //n
+        ISDNA[114] = 1;  //r
+        ISDNA[115] = 1;  //s
+        ISDNA[116] = 1;  //t
+        ISDNA[117] = 1;  //u
+        ISDNA[118] = 1;  //v
+        ISDNA[119] = 1;  //w
+        ISDNA[121] = 1;  //y
+    }
+
     public static int DNAtest(String source) {
-        byte[] cdn = new byte[128];
-        cdn[65] = 1;   //A
-        cdn[66] = 1;   //B
-        cdn[67] = 1;   //C
-        cdn[68] = 1;   //D
-        cdn[71] = 1;   //G
-        cdn[72] = 1;   //H
-        cdn[75] = 1;   //K
-        cdn[77] = 1;   //M
-        cdn[78] = 1;   //N
-        cdn[82] = 1;   //R
-        cdn[83] = 1;   //S
-        cdn[84] = 1;   //T
-        cdn[85] = 1;   //U
-        cdn[86] = 1;   //V
-        cdn[87] = 1;   //W
-        cdn[89] = 1;   //Y
-        cdn[97] = 1;   //a
-        cdn[98] = 1;   //b
-        cdn[99] = 1;   //c
-        cdn[100] = 1;  //d
-        cdn[103] = 1;  //g
-        cdn[104] = 1;  //h
-        cdn[107] = 1;  //k
-        cdn[109] = 1;  //m
-        cdn[110] = 1;  //n
-        cdn[114] = 1;  //r
-        cdn[115] = 1;  //s
-        cdn[116] = 1;  //t
-        cdn[117] = 1;  //u
-        cdn[118] = 1;  //v
-        cdn[119] = 1;  //w
-        cdn[121] = 1;  //y
         for (int i = 0; i < source.length(); i++) {
             int k = source.charAt(i);
-            if (k > 64 && k < 122 && cdn[k] > 0) {
+            if (k > 64 && k < 122 && ISDNA[k] > 0) {
                 return 1;
             }
         }
         return 0;
     }
+
+
+    private static final String DEFAULT_PATTERN = "0.0";
+    private static final ThreadLocal<java.text.DecimalFormat> DEFAULT_FORMAT =
+            ThreadLocal.withInitial(() -> new java.text.DecimalFormat(DEFAULT_PATTERN,
+                    new java.text.DecimalFormatSymbols(java.util.Locale.ROOT)));
 
     public static String NumberToSeq(double d, int i) {
         String s = "0.0";
@@ -57,34 +70,12 @@ public final class tools {
         }
         // Force a fixed locale so the decimal separator is always '.', never ',' on
         // comma-locale hosts (ru/kk/de/fr) — the report is tab-delimited and must parse downstream.
-        java.text.DecimalFormat f1 = new java.text.DecimalFormat(s,
-                new java.text.DecimalFormatSymbols(java.util.Locale.ROOT));
+        // The one pattern every live call site asks for is cached; DecimalFormat is not
+        // thread-safe, hence per-thread rather than one shared instance - a single static would
+        // reintroduce exactly the kind of shared mutable state that keeps the engine unparallelisable.
+        java.text.DecimalFormat f1 = s.equals(DEFAULT_PATTERN) ? DEFAULT_FORMAT.get()
+                : new java.text.DecimalFormat(s, new java.text.DecimalFormatSymbols(java.util.Locale.ROOT));
         return (f1.format(d));
-    }
-
-    public static double SeqToDouble(String str) {
-        StringBuilder r = new StringBuilder();
-        int n = 0;
-        int z = 0;
-        r.append(0);
-        for (int i = 0; i < str.length(); i++) {
-            char chr = str.charAt(i);
-            if (chr > 47 && chr < 58) {
-                r.append(chr);
-                z++;
-                if (z > 10) {
-                    break;
-                }
-            }
-            if (chr == '.' || chr == ',') {
-                if (n == 0) {
-                    r.append('.');
-                    n = 1;
-                }
-            }
-        }
-        // return (Double.valueOf("0" + r.toString()).doubleValue());
-        return (Double.parseDouble(r.toString()));
     }
 
     public static int SeqToInt(String str) {

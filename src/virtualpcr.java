@@ -40,6 +40,7 @@ public class virtualpcr {
             boolean ShowOnlyAmplicons = false;       //SetShowOnlyAmplicons
             boolean PCRmatch_alignment = true;       //SetShowPrimerAlignmentPCRproduct
             boolean PrimerStatistic = true;          //Statistic report for each primer
+            int threads = 1;                         //files processed at once, directory mode only
 
             System.out.println("Current Directory: " + System.getProperty("user.dir"));
             System.out.println("Command-line arguments:");
@@ -129,6 +130,12 @@ public class virtualpcr {
                         case "showonlyamplicons":
                             ShowOnlyAmplicons = lval.startsWith("true");
                             System.out.println(echo);
+                            break;
+                        case "threads":
+                            // Directory mode only. Each file in flight holds its own template and
+                            // report, so this bounds peak memory as much as it bounds concurrency.
+                            System.out.println(echo);
+                            threads = readInt(key, value, 1, Runtime.getRuntime().availableProcessors());
                             break;
                         case "number3errors":
                             System.out.println(echo);
@@ -227,24 +234,34 @@ public class virtualpcr {
                                 Files.createDirectories(parent);
                             }
                             int processed = 0;
+                            java.util.List<String> targets = new java.util.ArrayList<>();
+                            for (String nfile : filelist) {
+                                if (nfile != null) { // listFiles() may leave trailing nulls for sub-directories
+                                    targets.add(nfile);
+                                }
+                            }
                             try (BufferedWriter w = Files.newBufferedWriter(outPath, StandardCharsets.UTF_8)) {
-                                for (String nfile : filelist) {
-                                    if (nfile == null) {
-                                        continue; // listFiles() may leave trailing nulls for sub-directories
-                                    }
-                                    try {
-                                        StringBuilder sr = Run(nfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, flanks, Err3end, minlen, maxlen, FRpairs, pcr_predict, alignment, ShowOnlyAmplicons, PCRmatch_alignment, PrimerStatistic);
-                                        if (sr == null) {
-                                            System.out.println("Skipped (no sequences): " + nfile);
-                                            continue;
+                                if (threads > 1 && targets.size() > 1) {
+                                    processed = runParallel(w, targets, threads, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, flanks, Err3end, minlen, maxlen, FRpairs, pcr_predict, alignment, ShowOnlyAmplicons, PCRmatch_alignment, PrimerStatistic);
+                                } else {
+                                    for (String nfile : targets) {
+                                        try {
+                                            FileResult fr = Run(null, nfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, flanks, Err3end, minlen, maxlen, FRpairs, pcr_predict, alignment, ShowOnlyAmplicons, PCRmatch_alignment, PrimerStatistic);
+                                            if (fr.report() == null) {
+                                                System.out.println("Skipped (no sequences): " + nfile);
+                                                continue;
+                                            }
+                                            fr.engine().publishGlobalStat();
+                                            StringBuilder report = fr.report();
+                                            fr = null; // release the engine before the long write
+                                            writeChunked(w, report);
+                                            w.write("\n\n");
+                                            processed++;
+                                            System.out.println("Processed: " + nfile);
+                                        } catch (RuntimeException ex) {
+                                            // Isolate one malformed file so it cannot abort the whole batch.
+                                            System.out.println("Skipped (error): " + nfile + " - " + ex);
                                         }
-                                        writeChunked(w, sr);
-                                        w.write("\n\n");
-                                        processed++;
-                                        System.out.println("Processed: " + nfile);
-                                    } catch (RuntimeException ex) {
-                                        // Isolate one malformed file so it cannot abort the whole batch.
-                                        System.out.println("Skipped (error): " + nfile + " - " + ex);
                                     }
                                 }
                                 if (PrimerStatistic) {
@@ -270,10 +287,12 @@ public class virtualpcr {
                         if (PrimerStatistic) {
                             InSilicoPCR.beginGlobalStat();
                         }
-                        StringBuilder sr = Run(tagfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, flanks, Err3end, minlen, maxlen, FRpairs, pcr_predict, alignment, ShowOnlyAmplicons, PCRmatch_alignment, PrimerStatistic);
+                        FileResult fr = Run(null, tagfile, PrimersList, PrimersName, PrimersOri, isprobe, ispattern, iscircle, seqextract, flanks, Err3end, minlen, maxlen, FRpairs, pcr_predict, alignment, ShowOnlyAmplicons, PCRmatch_alignment, PrimerStatistic);
+                        StringBuilder sr = fr.report();
                         if (sr == null) {
                             System.out.println("No target sequences were processed in: " + tagfile);
                         } else {
+                            fr.engine().publishGlobalStat();
                             if (PrimerStatistic) {
                                 String summary = InSilicoPCR.getGlobalStatReport();
                                 if (!summary.isEmpty()) {
@@ -324,7 +343,7 @@ public class virtualpcr {
             "output_path", "targets_path", "primers_path", "primerstatistic", "type", "molecular",
             "linkedsearch", "showprimeralignmentpcrproduct", "sequenceextract", "flanks", "flanking",
             "frpairs", "showprimeralignment", "showpcrproducts", "showonlyamplicons",
-            "number3errors", "minlen", "maxlen");
+            "number3errors", "minlen", "maxlen", "threads");
 
     // A '#' is legal inside a path, so it only opens a comment where it cannot belong to a value:
     // before the '=' of a key=value pair, or set off by whitespace.
@@ -392,7 +411,7 @@ public class virtualpcr {
               Option keys are case-insensitive; boolean options accept true or false.
 
               PATHS
-                targets_path=PATH   Target sequence file, or a directory of files (FASTA or text).
+                targets_path=PATH   Target FASTA file, or a directory of FASTA files.
                 primers_path=PATH   Primer/probe file (FASTA, tab- or space-delimited).
                 output_path=PATH    Output file or directory; empty = write next to the target(s).
 
@@ -406,6 +425,10 @@ public class virtualpcr {
                 minlen=N                       Min amplicon length, bp; 20-50000 (default: 30).
                 maxlen=N                       Max amplicon length, bp; minlen-50000 (default: 3000).
                 number3errors=N                Mismatches allowed near the 3' end; 0-10 (default: 1).
+                threads=N                      Target files processed at once, directory mode only;
+                                               1-<CPUs> (default: 1). Each file in flight holds its
+                                               own template and report, so raising this raises peak
+                                               memory in proportion. Output is unchanged.
 
               OUTPUT CONTROL
                 primerstatistic=true|false                Per-primer summary statistics (default: true).
@@ -443,22 +466,38 @@ public class virtualpcr {
             """);
     }
 
+    // What one target file produced: the report text (null when the file yielded no sequences),
+    // the engine that produced it - kept so its per-primer tallies can be folded into the global
+    // summary later, in file order - and the console lines the run would have printed.
+    private record FileResult(StringBuilder report, InSilicoPCR engine, StringBuilder log) {
+    }
+
+    // Console line from a run. With log == null it goes straight out, as it always did; a worker
+    // thread passes a buffer instead, so the lines can be replayed in file order afterwards.
+    private static void say(StringBuilder log, String msg) {
+        if (log == null) {
+            System.out.println(msg);
+        } else {
+            log.append(msg).append(System.lineSeparator()); // println's terminator, not a bare '\n'
+        }
+    }
+
     // Computes the report for one target file and returns it. The caller owns all file output.
-    private static StringBuilder Run(String tagfile, String[] PrimersList, String[] PrimersName, String[] PrimersOri, boolean isprobe, boolean ispattern, boolean iscircle, boolean seqextract, int flanks, int Err3end, int minlen, int maxlen, boolean FRpairs, boolean pcr_predict, boolean alignment, boolean ShowOnlyAmplicons, boolean PCRmatch_alignment, boolean PrimerStatistic) {
+    private static FileResult Run(StringBuilder log, String tagfile, String[] PrimersList, String[] PrimersName, String[] PrimersOri, boolean isprobe, boolean ispattern, boolean iscircle, boolean seqextract, int flanks, int Err3end, int minlen, int maxlen, boolean FRpairs, boolean pcr_predict, boolean alignment, boolean ShowOnlyAmplicons, boolean PCRmatch_alignment, boolean PrimerStatistic) {
         try {
-            System.out.println("Running...");
-            System.out.println("\nTarget file name: " + tagfile);
+            say(log, "Running...");
+            say(log, "\nTarget file name: " + tagfile);
 
             InSilicoPCR s2 = new InSilicoPCR();
             ReadingSequencesFiles rf = new ReadingSequencesFiles(Paths.get(tagfile));
             if (rf.getNseq() == 0) {
-                System.out.println("No '>' header line found in " + tagfile
+                say(log, "No '>' header line found in " + tagfile
                         + " - the target must be in FASTA format.");
-                System.out.println("File format in Fasta:\n>header\nsequence here\n\nIn FASTA format the line before the nucleotide sequence, called the FASTA definition line, must begin with a carat (\">\"), followed by a unique SeqID (sequence identifier).\nThe line after the FASTA definition line begins the nucleotide sequence.\n");
-                System.out.println(">seq1\nactacatactacatcactctctctccgcacag\n");
-                return null; // no sequences -> signal "not processed" to the caller
+                say(log, "File format in Fasta:\n>header\nsequence here\n\nIn FASTA format the line before the nucleotide sequence, called the FASTA definition line, must begin with a carat (\">\"), followed by a unique SeqID (sequence identifier).\nThe line after the FASTA definition line begins the nucleotide sequence.\n");
+                say(log, ">seq1\nactacatactacatcactctctctccgcacag\n");
+                return new FileResult(null, null, log); // no sequences -> "not processed"
             }
-            System.out.println("Target sequence length = " + rf.getLength() + " nt");
+            say(log, "Target sequence length = " + rf.getLength() + " nt");
             s2.SetSequences(rf.getSequences(), rf.getNames());
             s2.SetCurrentFileName(tagfile);
             s2.SetPrimerStat(PrimerStatistic);
@@ -488,12 +527,89 @@ public class virtualpcr {
             // this method and dies with it - do not hoist the InSilicoPCR instance out.
             StringBuilder sr = s2.getResult();
             sr.append(st);
-            return sr;
+            return new FileResult(sr, s2, log);
 
         } catch (IOException e) {
-            System.out.println("Incorrect file name.\n");
-            return null; // load failure -> signal "not processed" to the caller
+            say(log, "Incorrect file name.\n");
+            return new FileResult(null, null, log); // load failure -> "not processed"
         }
+    }
+
+    // Runs the targets on a bounded pool, one batch of `threads` files at a time, and consumes the
+    // batch strictly in file order. Deliberately batched rather than a sliding window: the real cost
+    // of running files together is memory - each one in flight holds its whole template and its whole
+    // report - so peak heap stays at `threads` files no matter how large the directory is.
+    // Consuming in order also keeps the combined report, the console log and the merge order of the
+    // global summary byte-for-byte identical to a serial run.
+    private static int runParallel(BufferedWriter w, java.util.List<String> targets, int threads,
+            String[] PrimersList, String[] PrimersName, String[] PrimersOri, boolean isprobe,
+            boolean ispattern, boolean iscircle, boolean seqextract, int flanks, int Err3end,
+            int minlen, int maxlen, boolean FRpairs, boolean pcr_predict, boolean alignment,
+            boolean ShowOnlyAmplicons, boolean PCRmatch_alignment, boolean PrimerStatistic)
+            throws IOException {
+        int processed = 0;
+        java.util.concurrent.ExecutorService pool = java.util.concurrent.Executors.newFixedThreadPool(
+                threads, r -> {
+                    Thread t = new Thread(r, "virtualpcr-worker");
+                    t.setDaemon(true); // the scan loop never checks for interruption, so an abort
+                    return t;          // must not be held up waiting for siblings to finish
+                });
+        try {
+            for (int base = 0; base < targets.size(); base += threads) {
+                int end = Math.min(base + threads, targets.size());
+                java.util.List<java.util.concurrent.Future<FileResult>> batch = new java.util.ArrayList<>();
+                java.util.List<StringBuilder> logs = new java.util.ArrayList<>();
+                for (int k = base; k < end; k++) {
+                    final String nf = targets.get(k);
+                    // The consumer owns the buffer, so whatever the run managed to say is printed
+                    // even when the run itself throws.
+                    final StringBuilder lg = new StringBuilder();
+                    logs.add(lg);
+                    batch.add(pool.submit(() -> Run(lg, nf, PrimersList, PrimersName,
+                            PrimersOri, isprobe, ispattern, iscircle, seqextract, flanks, Err3end,
+                            minlen, maxlen, FRpairs, pcr_predict, alignment, ShowOnlyAmplicons,
+                            PCRmatch_alignment, PrimerStatistic)));
+                }
+                for (int k = 0; k < batch.size(); k++) {
+                    String nfile = targets.get(base + k);
+                    FileResult fr;
+                    try {
+                        fr = batch.get(k).get();
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        throw new IOException("Interrupted while processing " + nfile, ie);
+                    } catch (java.util.concurrent.ExecutionException ee) {
+                        Throwable cause = ee.getCause();
+                        System.out.print(logs.get(k)); // whatever the run said before it failed
+                        if (cause instanceof Error err) {
+                            // OutOfMemoryError and its kin must abort the run. Reporting them as a
+                            // skipped file would leave a silently truncated report behind an exit
+                            // code of 0 - lower `threads` instead, or raise -Xmx.
+                            throw err;
+                        }
+                        // Isolate one malformed file so it cannot abort the whole batch.
+                        System.out.println("Skipped (error): " + nfile + " - " + cause);
+                        continue;
+                    }
+                    batch.set(k, null); // the Future must not keep the engine alive either
+                    System.out.print(fr.log());
+                    if (fr.report() == null) {
+                        System.out.println("Skipped (no sequences): " + nfile);
+                        continue;
+                    }
+                    fr.engine().publishGlobalStat(); // in file order, on this thread only
+                    StringBuilder report = fr.report();
+                    fr = null; // engine, target sequences and k-mer index are free from here on
+                    writeChunked(w, report);
+                    w.write("\n\n");
+                    processed++;
+                    System.out.println("Processed: " + nfile);
+                }
+            }
+        } finally {
+            pool.shutdownNow(); // drop anything still queued; running scans are daemons
+        }
+        return processed;
     }
 
     // Write text to a file as UTF-8, creating parent directories and truncating any existing file.
