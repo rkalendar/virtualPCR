@@ -1,20 +1,44 @@
+# virtualPCR configuration file - genome-wide screen example
+#
+# Edit the three paths below, then run from the folder that holds virtualPCR.jar:
+#   java -Xms4g -Xmx16g -jar virtualPCR.jar config.file
+# Raise -Xmx for large genomes (see README, "Large Genomes").
+#
+# One key=value per line. Keys are case-insensitive, values keep their case.
+# A line starting with # is a comment; text after " #" on a key=value line is ignored.
+# Lines without "=" (notes, command lines) are ignored. Unknown keys are reported as
+# "Warning: unknown option ignored" and the run continues on defaults for that setting.
+# The file name and extension are not significant.
+
+# --- Paths ---
+# targets_path: one FASTA file, or a directory of FASTA files (e.g. one per chromosome)
+# output_path : report file or directory; leave empty to write next to the target(s)
 targets_path=D:\Genomes\GRCh38.p14\
 primers_path=D:\test\primers.txt
 output_path=D:\report\
+
+# --- Search mode ---
+# type: primer | probe      molecular: linear | circle      linkedsearch, FRpairs: true | false
 type=primer
+molecular=linear
 linkedsearch=false
-molecular=linear/circle
-number3errors=0
+FRpairs=false
+
+# --- Filters (bp) ---
+# minlen 20-50000, maxlen minlen-50000 (both inclusive), number3errors 0-10
 minlen=150
 maxlen=300
-FRpairs=false
-CTconversion=false/true
+number3errors=0
+
+# --- Directory mode ---
+# threads=N processes N target files at once. Output is identical for any N, but each file
+# in flight holds its own template and report, so raise -Xmx together with threads.
+threads=1
+
+# --- Output control (true | false) ---
+primerstatistic=true
 SequenceExtract=true
 ShowPrimerAlignment=false
-ShowOnlyAmplicons=true
 ShowPCRProducts=true
+ShowOnlyAmplicons=true
 ShowPrimerAlignmentPCRproduct=false
-ShowPCRproductCalculation=true/false
-
-
-java -jar -Xms4g -Xmx16g D:\virtualPCR\dist\virtualPCR.jar D:\test\config.file 
