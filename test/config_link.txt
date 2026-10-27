@@ -1,21 +1,39 @@
-example for linked search:
+# virtualPCR configuration file - linked (associated) search example
+#
+# With linkedsearch=true the primer file holds patterns of linked sequences with the
+# expected distance between them, e.g.  SEQ1[200-300]SEQ2  or  SEQ1[300]@SEQ2
+# (@ marks an element to be reverse-complemented). Any number of elements may be chained.
+# See README, "linkedsearch". The pattern in cassandra.txt:
+#   RGTTAAGYRHGY[40]RRRATRGGTRACY[300]tggtatcagagc
+#
+# One key=value per line; # starts a comment; lines without "=" are ignored;
+# unknown keys are reported as "Warning: unknown option ignored".
 
-targets_path=E:\Genomes\Rhododendron_bailiense\
+# --- Paths ---
+targets_path=C:\virtualPCR\test\ch02.fasta
 primers_path=C:\virtualPCR\test\cassandra.txt
+output_path=
+
+# --- Search mode ---
 type=primer
+molecular=linear
 linkedsearch=true
-molecular=linear/circle
-number3errors=1
+FRpairs=false
+
+# --- Filters (bp) ---
 minlen=100
 maxlen=3000
-FRpairs=false/true
-CTconversion=false/true
+number3errors=1
+
+# --- Output control (true | false) ---
+primerstatistic=true
 SequenceExtract=true
 ShowPrimerAlignment=true
+ShowPCRProducts=true
 ShowOnlyAmplicons=true
-ShowPCRProducts=true/false
-ShowPrimerAlignmentPCRproduct=true/false 
-ShowPCRproductCalculation=true/false
+ShowPrimerAlignmentPCRproduct=true
 
-command line:
-java -jar -Xms4g -Xmx32g C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\test\config_link.txt
+# Run (Windows):
+#   java -Xms4g -Xmx16g -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\test\config_link.txt
+# Run (Linux / macOS, from the repository root):
+#   java -Xms4g -Xmx16g -jar dist/virtualPCR.jar test/config_link.txt

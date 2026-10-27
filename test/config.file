@@ -1,8 +1,4 @@
-# virtualPCR configuration file - genome-wide screen example
-#
-# Edit the three paths below, then run from the folder that holds virtualPCR.jar:
-#   java -Xms4g -Xmx16g -jar virtualPCR.jar config.file
-# Raise -Xmx for large genomes (see README, "Large Genomes").
+# virtualPCR configuration file - basic example
 #
 # One key=value per line. Keys are case-insensitive, values keep their case.
 # A line starting with # is a comment; text after " #" on a key=value line is ignored.
@@ -11,11 +7,11 @@
 # The file name and extension are not significant.
 
 # --- Paths ---
-# targets_path: one FASTA file, or a directory of FASTA files (e.g. one per chromosome)
+# targets_path: one FASTA file, or a directory of FASTA files
 # output_path : report file or directory; leave empty to write next to the target(s)
-targets_path=D:\Genomes\GRCh38.p14\
-primers_path=D:\test\primers.txt
-output_path=D:\report\
+targets_path=C:\virtualPCR\test\ch02.fasta
+primers_path=C:\virtualPCR\test\rt.txt
+output_path=
 
 # --- Search mode ---
 # type: primer | probe      molecular: linear | circle      linkedsearch, FRpairs: true | false
@@ -26,19 +22,22 @@ FRpairs=false
 
 # --- Filters (bp) ---
 # minlen 20-50000, maxlen minlen-50000 (both inclusive), number3errors 0-10
-minlen=150
-maxlen=300
-number3errors=0
-
-# --- Directory mode ---
-# threads=N processes N target files at once. Output is identical for any N, but each file
-# in flight holds its own template and report, so raise -Xmx together with threads.
-threads=1
+minlen=200
+maxlen=500
+number3errors=1
 
 # --- Output control (true | false) ---
+# flanks=N keeps N template bases on each side of every extracted amplicon (lower case,
+# amplicon in upper case) and turns SequenceExtract on automatically.
 primerstatistic=true
 SequenceExtract=true
-ShowPrimerAlignment=false
+flanks=100
+ShowPrimerAlignment=true
 ShowPCRProducts=true
-ShowOnlyAmplicons=true
+ShowOnlyAmplicons=false
 ShowPrimerAlignmentPCRproduct=false
+
+# Run (Windows):
+#   java -jar C:\virtualPCR\dist\virtualPCR.jar C:\virtualPCR\test\config.file
+# Run (Linux / macOS, from the repository root):
+#   java -jar dist/virtualPCR.jar test/config.file
