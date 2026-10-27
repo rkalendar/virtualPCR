@@ -2,7 +2,7 @@
 
 **In silico PCR for simple and complex tasks**
 
-[![Java](https://img.shields.io/badge/Java-26+-orange.svg)](https://www.oracle.com/java/technologies/downloads/)
+[![Java](https://img.shields.io/badge/Java-25+-orange.svg)](https://www.oracle.com/java/technologies/downloads/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blue.svg)]()
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE.txt)
 [![Online Tool](https://img.shields.io/badge/Try%20Online-virtualPCR-green.svg)](https://primerdigital.com/tools/epcr.html)
@@ -81,7 +81,7 @@ If you use virtualPCR in your work, please cite:
 
 | Requirement | Details |
 |-------------|---------|
-| **Java** | Version 26 or higher |
+| **Java** | Version 25 or higher |
 | **OS** | Windows, Linux, or macOS |
 | **RAM** | Default JVM heap is sufficient for most tasks; increase for whole-genome analyses (see [Large Genomes](#large-genomes)) |
 
@@ -96,7 +96,7 @@ If you use virtualPCR in your work, please cite:
 
 1. Download `virtualPCR.jar` from the `dist` directory of this repository.
 2. Place it in your preferred location.
-3. Ensure Java 26+ is installed and available in your `PATH`.
+3. Ensure Java 25+ is installed and available in your `PATH`.
 
 Verify Java is available:
 
@@ -111,11 +111,11 @@ java -version
 conda config --add channels conda-forge
 conda config --set channel_priority strict
 
-# Create environment with OpenJDK 26
-conda create -n java26 openjdk=26
+# Create environment with OpenJDK 25
+conda create -n java25 openjdk=25
 
 # Activate environment
-conda activate java26
+conda activate java25
 
 # Verify installation
 java -version
