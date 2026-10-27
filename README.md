@@ -508,7 +508,7 @@ Each extracted record carries 100 template bases on either side of the amplicon,
 
 | Symptom | Likely cause / fix |
 |---------|-------------------|
-| `UnsupportedClassVersionError` | Java version is older than 26 — the JAR is compiled for class-file version 70. Install Java 26+ and verify with `java -version`. |
+| `UnsupportedClassVersionError` | Java version is older than 25 — the JAR is compiled for class-file version 69. Install Java 25+ and verify with `java -version`. |
 | `OutOfMemoryError` | Increase JVM heap with `-Xmx`, e.g. `-Xmx16g`. If you set `threads` above 1, each file in flight needs its own memory — lower it or raise `-Xmx` in proportion. |
 | No products reported | Try `type=probe`, increase `number3errors`, or widen `minlen`/`maxlen`. |
 | Too many products on a genome | Tighten `number3errors`, narrow the amplicon size window, or switch to `ShowOnlyAmplicons=true` for compact output. |
